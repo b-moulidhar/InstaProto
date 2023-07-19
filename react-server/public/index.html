@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="./styles/bootstrap.css"> -->
+    <!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.1.js"></script>
+    <script>
+       function deleteHero(args){
+            $.ajax({
+                method : "delete",
+                url : "/delete/"+args,
+                success : function(res){
+                    reload();
+                    console.log(res.message, res.hero)
+                },
+                error : function(err){
+                    console.log("Error ", err)
+                }
+            })
+        }
+        function reload(){
+            $.ajax({
+            url:"/data",
+            method:"get",
+            success : function(res){
+                let tbody = $("#tbody");
+                tbody.empty();
+                $(res).each(function(idx,val){
+                    $("tbody").append(`
+                    <tr>
+                <th scope="row">${idx+1}</th>
+                <td scope="col">${val.title}</td>
+                <td scope="col">${val.firstname}</td>
+                <td scope="col">${val.lastname}</td>
+                <td><button id="data-heroid" class="btn btn-warning edit">edit</button></td>
+                <td><button id="data-heroid" class="btn btn-danger delete">delete</button></td>
+              </tr>
+                    `)
+                })
+            },
+            error: function(err){
+                console.log("error",err);
+            }
+        })
+        }
+        //-----------------------------------
+        function addHeroHandler(){
+            $.ajax({
+                url : "/data",
+                method : "post",
+                contentType : "application/json",
+                dataType : "json",
+                data : JSON.stringify({
+                    title : $("#htitle").val(),
+                    firstname : $("#hfname").val(),
+                    lastname : $("#hlname").val()
+                }),success : function(){
+                    $("#htitle").val('');
+                    $("#hfname").val('');
+                    $("#hlname").val('');
+                },error : function(err){
+                    console.log("Error ", err)
+                }
+            })
+            reload();
+        }
+        function updateHandler(){
+            $.ajax({
+                method:"post",
+                url:"/update/"
+            })
+        }
+        //--------------------
+        $(function(){
+            reload();
+            $("#addbtn").on("click", addHeroHandler);
+            $("#tbody").on("click",".delete",function(evt){
+                deleteHero($(evt.target).attr("data-heroid"))
+        })
+    });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Mongo CRUD</h1>
+        <div id="box">
+            <div class="mb-3">
+                <label for="htitle" class="form-label">Hero Title</label>
+                <input  class="form-control" id="htitle" >
+            </div>
+            <div class="mb-3">
+                <label for="hfname" class="form-label">Hero firstname</label>
+                <input  class="form-control" id="hfname" >
+            </div>
+            <div class="mb-3">
+                <label for="hlname" class="form-label">Hero lastname</label>
+                <input  class="form-control" id="hlname" >
+            </div>
+              <button id="addbtn" type="submit" class="btn btn-primary">add hero</button>
+        </div>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">title</th>
+                <th scope="col">firstname</th>
+                <th scope="col">lastname</th>
+               
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+    </div>
+</body>
+</html>
