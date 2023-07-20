@@ -1,0 +1,10 @@
+.container{
+    width: 100%;
+}
+.items{
+    display: flex;
+    float: left;
+    border: 1px solid;
+    height: 40%;
+    width: 30%;
+}

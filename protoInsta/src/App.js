@@ -11,14 +11,6 @@ function App() {
             <li><NavLink end  to="/">Home Component</NavLink></li>
             <li><NavLink end  to="uploadImage">Upload image</NavLink></li>
             <li><NavLink end  to="viewImages">View images</NavLink></li>
-        
-            {/* <li><Link to="/">Home</Link></li>
-            <li><Link to="batman">batman</Link></li>
-            <li><Link to="superman">superman</Link></li>
-            <li><Link to="aquaman">aquaman</Link></li>
-            <li><Link to="wonderwoman">wonderwoman</Link></li>
-            <li><Link to="flash">flash</Link></li>
-            <li><Link to="cyborg">cyborg</Link></li> */}
         </ul>
         
         

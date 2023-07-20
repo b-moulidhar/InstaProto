@@ -46,7 +46,7 @@ pool.getConnection((err, connection) => {
 app.use(express.static(__dirname + "/public"))
   .use(express.json())
   .use(cors());
-
+//----------------------------------------------------------------------------------------------------------------------
 // READ
 app.get("/data", (req, res) => {
   pool.query("SELECT * FROM table1", (err, results) => {
@@ -58,6 +58,8 @@ app.get("/data", (req, res) => {
     return res.json(results);
   });
 });
+
+//------------------------------------------------------------------------------------------------------------
 
 app.get("/getImages", (req, res) => {
   const query = 'SELECT * FROM files';
@@ -87,7 +89,7 @@ app.get("/getImages", (req, res) => {
   });
 });
 
-  
+//-----------------------------------------------------------------------------------------------------------------------
 
 app.post('/create', (req, res) => {
     const { name, age } = req.body;
@@ -104,6 +106,8 @@ app.post('/create', (req, res) => {
       }
     });
   });
+
+//----------------------------------------------------------------------------------------------------------------------
 
   app.post('/upload', upload.single('file'), (req, res) => {
     console.log(req.file);
@@ -127,6 +131,14 @@ app.post('/create', (req, res) => {
       res.json({ message: 'File uploaded successfully' });
     });
   });
+
+//-----------------------------------------------------------------------------------------------------------------
+
+  app.post("/comments/:hid",(req,res)=>{
+
+  })
+
+//-------------------------------------------------------------------------------------------------------------------
 
 // Start the server
 app.listen(port, config.host, errorHandler);

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "../css/viewComp.css"
 
 const ViewComp = () => {
   const [heroes, setHeroes] = useState([]);
@@ -16,7 +17,7 @@ const ViewComp = () => {
   useEffect(() => {
     refresh();
   }, []);
-
+  
   // Function to convert base64 to blob and create URL
   const createBlobUrl = (base64String, fileType) => {
     const byteCharacters = atob(base64String);
@@ -54,26 +55,32 @@ const ViewComp = () => {
 
   return (
     <>
+    <div className="container">
+
       {loading ? (
         <p>Loading...</p>
       ) : (
         heroes.map((hero, index) => (
-          <div key={index}>
+          <div key={index} className="items">
             {/* Render the individual properties of the hero object */}
-            <h2>{hero.filename}</h2>
+            <img src={createBlobUrl(hero.filedata, hero.filetype)} alt={`Hero ${index}`} height="200px" width="200px" />
+            <p>{hero.filename}</p>
             <p>{hero.filetype}</p>
             {/* Render the image using createBlobUrl */}
-            <img src={createBlobUrl(hero.filedata, hero.filetype)} alt={`Hero ${index}`} />
             {hero.filetype === "application/pdf" && (
               <a href={createBlobUrl(hero.filedata, hero.filetype)} download={hero.filename}>
                 download
               </a>
             )}
+            {((hero.filetype === "image/jpeg")||(hero.filetype === "image/png"))&& 
+            <input type="textbox" name="comment" id={hero.filename} />
+            }
             {/* Don't forget to revoke the URL after the download link is clicked */}
             {hero.filetype === "application/pdf" && revokeBlobUrl(createBlobUrl(hero.filedata, hero.filetype))}
           </div>
         ))
       )}
+    </div>
     </>
   );
 };
