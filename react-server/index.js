@@ -46,7 +46,7 @@ pool.getConnection((err, connection) => {
 app.use(express.static(__dirname + "/public"))
   .use(express.json())
   .use(cors());
-
+//----------------------------------------------------------------------------------------------------------------------
 // READ
 app.get("/data", (req, res) => {
   pool.query("SELECT * FROM table1", (err, results) => {
@@ -59,34 +59,37 @@ app.get("/data", (req, res) => {
   });
 });
 
+//------------------------------------------------------------------------------------------------------------
+
 app.get("/getImages", (req, res) => {
-    const query = 'SELECT * FROM files';
-    const ids = req.query.ids;
-  
-    pool.query(query, [ids], (err, results) => {
-      if (err) {
-        console.error('Error executing query:', err);
-        return res.status(500).json({ error: 'Error fetching PDF blob data from MySQL' });
-      }
-  
-      // Create an array to store the binary PDF blobs
-      const pdfBlobs = [];
-  
-      // Iterate through the query results and push each PDF blob to the array
-      results.forEach(result => {
-        pdfBlobs.push(result.pdf_blob);
-      });
-  
-      // Send the PDF blobs as a response
-      res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': 'inline; filename="files.pdf"'
-      });
-      pdfBlobs.forEach(blob => res.write(blob, 'binary'));
-      res.end();
+  const query = 'SELECT * FROM files';
+
+  pool.query(query, (err, results) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      return res.status(500).json({ error: 'Error fetching PDF blob data from MySQL' });
+    }
+
+    // Create an array to store the file data
+    const fileDataArray = [];
+
+    // Iterate through the query results and push each file data to the array
+    results.forEach(result => {
+      const blobName = result.filename;
+      const blobType = result.filetype;
+      const blobData = result.filedata.toString('binary');
+      fileDataArray.push({ filename: blobName, filetype: blobType, filedata: blobData });
     });
+
+    // Send the file data as a response
+    res.writeHead(200, {
+      'Content-Type': 'application/json', // Use application/json content type for sending JSON data
+    });
+    res.end(JSON.stringify(fileDataArray)); // Convert the array to JSON and send it as the response
   });
-  
+});
+
+//-----------------------------------------------------------------------------------------------------------------------
 
 app.post('/create', (req, res) => {
     const { name, age } = req.body;
@@ -103,6 +106,8 @@ app.post('/create', (req, res) => {
       }
     });
   });
+
+//----------------------------------------------------------------------------------------------------------------------
 
   app.post('/upload', upload.single('file'), (req, res) => {
     console.log(req.file);
@@ -126,6 +131,14 @@ app.post('/create', (req, res) => {
       res.json({ message: 'File uploaded successfully' });
     });
   });
+
+//-----------------------------------------------------------------------------------------------------------------
+
+  app.post("/comments/:hid",(req,res)=>{
+
+  })
+
+//-------------------------------------------------------------------------------------------------------------------
 
 // Start the server
 app.listen(port, config.host, errorHandler);
