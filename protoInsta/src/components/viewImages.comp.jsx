@@ -17,7 +17,7 @@ const ViewComp = () => {
   useEffect(() => {
     refresh();
   }, []);
-  
+
   // Function to convert base64 to blob and create URL
   const createBlobUrl = (base64String, fileType) => {
     const byteCharacters = atob(base64String);
@@ -63,7 +63,7 @@ const ViewComp = () => {
         heroes.map((hero, index) => (
           <div key={index} className="items">
             {/* Render the individual properties of the hero object */}
-            <img src={createBlobUrl(hero.filedata, hero.filetype)} alt={`Hero ${index}`} height="200px" width="200px" />
+            <img src={createBlobUrl(hero.filedata, hero.filetype)} alt={`Hero ${index}`} height="150px" width="150px" />
             <p>{hero.filename}</p>
             <p>{hero.filetype}</p>
             {/* Render the image using createBlobUrl */}
@@ -72,8 +72,10 @@ const ViewComp = () => {
                 download
               </a>
             )}
-            {((hero.filetype === "image/jpeg")||(hero.filetype === "image/png"))&& 
-            <input type="textbox" name="comment" id={hero.filename} />
+            {((hero.filetype === "image/jpeg")||(hero.filetype === "image/png"))&& <p>
+              comments: <br />
+              <input type="textbox" name="comment" id={hero.filename} />
+            </p>
             }
             {/* Don't forget to revoke the URL after the download link is clicked */}
             {hero.filetype === "application/pdf" && revokeBlobUrl(createBlobUrl(hero.filedata, hero.filetype))}
