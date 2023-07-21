@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: nodejs-app
 spec:
-  replicas: 3  # Set the desired number of replicas
+  replicas: 1  # Set the desired number of replicas
   selector:
     matchLabels:
       app: nodejs-app
@@ -17,3 +17,5 @@ spec:
           image: your_nodejs_image:tag
           ports:
             - containerPort: 5000  
+
+
