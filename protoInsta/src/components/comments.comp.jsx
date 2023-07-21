@@ -3,6 +3,7 @@ import axios from "axios";
 
 const ImageComp = () => {
   const [file, setFile] = useState(null);
+  const[data,SetData] = useState()
 
   function inputHandler(evt) {
     setFile(evt.target.files[0]);
@@ -15,6 +16,9 @@ const ImageComp = () => {
     // Create a new FormData instance and append the selected file
     const formData = new FormData();
     formData.append("file", file);
+
+  
+
 
     axios
       .post("http://localhost:5000/upload", formData)
