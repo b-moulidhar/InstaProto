@@ -1,7 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
+import { BrowserRouter, NavLink, Route,Routes} from "react-router-dom"
 
-const ImageComp = () => {
+const UploadComp = () => {
   const [file, setFile] = useState(null);
   const[data,SetData] = useState()
 
@@ -17,16 +18,30 @@ const ImageComp = () => {
     const formData = new FormData();
     formData.append("file", file);
 
-  
+    let token = localStorage.getItem("Authorization");
+    let userId = localStorage.getItem("UserId"); 
 
 
     axios
-      .post("http://localhost:5000/upload", formData)
+      .post("http://localhost:5000/upload", formData,{
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "UserID": userId,
+        } 
+      })
       .then((response) => {
-        console.log(response.data);
+        console.log(response);
+        if(response.status===200){
+
+          alert("data added successfully")
+        }
+        if(response.status==401){
+          alert("please login again")
+        }
       })
       .catch((err) => {
-        console.log(err);
+        alert("please login again")
+        console.log("Error ",err);
       });
   }
 
@@ -43,4 +58,4 @@ const ImageComp = () => {
   );
 };
 
-export default ImageComp;
+export default UploadComp;

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../css/viewComp.css"
-import { NavLink } from "react-router-dom";
 
-const ViewComp = () => {
+const UserUploads = () => {
   const [heroes, setHeroes] = useState([]);
   const [loading, setLoading] = useState(true);
   let token = localStorage.getItem("Authorization");
@@ -16,11 +15,19 @@ const ViewComp = () => {
         "UserID": userId,
       } 
     }).then((res) => {
-      setHeroes(res.data);
+      let tempData = [];
+      res.data.forEach((data)=>{
+        if(data.uid == userId){
+            tempData.push(data);
+        }
+    })
+    if(tempData.length!=0){
+        setHeroes(tempData); 
+    }
       setLoading(false);
     })
     .catch((err)=>{
-      alert(err, "please login again")
+        alert(err, "please login again")
     })
   };
 
@@ -66,8 +73,6 @@ const ViewComp = () => {
   return (
     <>
     <div className="container">
-    <NavLink end  to="uploads"><button className="btn primary">viewImages</button></NavLink>
-    <NavLink end  to="userImages"><button className="btn primary">upload a image</button></NavLink>
 
       {loading ? (
         <p>Loading...</p>
@@ -84,11 +89,11 @@ const ViewComp = () => {
                 download
               </a>
             )}
-            {((hero.filetype === "image/jpeg")||(hero.filetype === "image/png"))&& <p>
+            {/* {((hero.filetype === "image/jpeg")||(hero.filetype === "image/png"))&& <p>
               comments: <br />
               <input type="textbox" name="comment" id={hero.filename} />
             </p>
-            }
+            } */}
             {/* Don't forget to revoke the URL after the download link is clicked */}
             {hero.filetype === "application/pdf" && revokeBlobUrl(createBlobUrl(hero.filedata, hero.filetype))}
           </div>
@@ -99,4 +104,4 @@ const ViewComp = () => {
   );
 };
 
-export default ViewComp;
+export default UserUploads;

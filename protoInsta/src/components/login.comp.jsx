@@ -20,11 +20,17 @@ const [credentials, setCredentials] = useState({email:'', pswd:''});
         setCredentials({...credentials,[evt.target.id]:evt.target.value})
     }
     function login(){
+        localStorage.clear();
         axios.post("http://localhost:5000/login",credentials)
         .then((res)=>{
             alert(res.data.message)
+
+            localStorage.setItem("Authorization",res.data.token);
+            localStorage.setItem("UserId",res.data.user);
+            
+            
             if(res.status==200){
-                window.location.href ="/uploadImage"
+                window.location.href ="/profilepage"
             // history.push("/uploadImage");
             }
         })

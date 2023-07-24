@@ -11,11 +11,14 @@ function changeHandler(evt){
 }
 
 function checkPswd(evt){
-    if(user.u_pswd === evt.target.value){
+    if(user.pswd === evt.target.value){
         setConfPswd(true);
+        console.log("password match");
     }
     if(confPswd){
         changeHandler();
+    }else{
+        alert("Password doesn't match")
     }
 }
 
@@ -24,10 +27,20 @@ function register(){
     if(user.name!=''){
         axios.post("http://localhost:5000/register",user)
         .then((res)=>{
-            console.log(res.data)
+            console.log(res)
+            if(res.status==201){
+                alert("Resgistered successfully");
+                window.location.href = "/";
+            }else if(res.status == 500){
+                alert("email already exits");
+            }
+            else{
+                alert("there was some error or please check the formats of data entered");
+            }
         })
         .catch((err)=>{
             console.log("Error ",err)
+            alert(err)
         })
     }
 }
