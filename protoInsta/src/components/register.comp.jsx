@@ -1,0 +1,175 @@
+import axios from "axios";
+import { useState } from "react";
+
+function Register(){
+const [confPswd, setConfPswd] = useState(false);
+const [user,setUser] = useState({name :'', email:'', mobile:'', pswd:'' })
+
+
+function changeHandler(evt){
+    setUser({...user, [evt.target.id]:evt.target.value})
+}
+
+function checkPswd(evt){
+    if(user.pswd === evt.target.value){
+        setConfPswd(true);
+        console.log("password match");
+    }
+    if(confPswd){
+        changeHandler();
+    }else{
+        alert("Password doesn't match")
+    }
+}
+
+function register(){
+    console.log("hello")
+    if(user.name!=''){
+        axios.post("http://localhost:5000/register",user)
+        .then((res)=>{
+            console.log(res)
+            if(res.status==201){
+                alert("Resgistered successfully");
+                window.location.href = "/";
+            }else if(res.status == 500){
+                alert("email already exits");
+            }
+            else{
+                alert("there was some error or please check the formats of data entered");
+            }
+        })
+        .catch((err)=>{
+            console.log("Error ",err)
+            alert(err)
+        })
+    }
+}
+    return (
+      <>
+        <section className="vh-100" style={{ backgroundColor: "#eee" }}>
+          <div className="container h-100">
+            <div className="row d-flex justify-content-center align-items-center h-100">
+              <div className="col-lg-12 col-xl-11">
+                <div className="card text-black" style={{ borderRadius: 25 }}>
+                  <div className="card-body p-md-5">
+                    <div className="row justify-content-center">
+                      <div className="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                        <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">
+                          Sign up
+                        </p>
+                        <form className="mx-1 mx-md-4">
+                          <div className="d-flex flex-row align-items-center mb-4">
+                            <i className="fas fa-user fa-lg me-3 fa-fw" />
+                            <div className="form-outline flex-fill mb-0">
+                              <input
+                                type="text"
+                                id="name"
+                                className="form-control"
+                                onInput={(evt)=>{changeHandler(evt)}}
+                              />
+                              <label
+                                className="form-label"
+                                htmlFor="name"
+                              >
+                                Your Name
+                              </label>
+                            </div>
+                          </div>
+                          <div className="d-flex flex-row align-items-center mb-4">
+                            <i className="fas fa-envelope fa-lg me-3 fa-fw" />
+                            <div className="form-outline flex-fill mb-0">
+                              <input
+                                type="email"
+                                id="email"
+                                className="form-control"
+                                onInput={(evt)=>{changeHandler(evt)}}
+                              />
+                              <label
+                                className="form-label"
+                                htmlFor="email"
+                              >
+                                Your Email
+                              </label>
+                            </div>
+                          </div>
+                          <div className="d-flex flex-row align-items-center mb-4">
+                            <i className="fas fa-envelope fa-lg me-3 fa-fw" />
+                            <div className="form-outline flex-fill mb-0">
+                              <input
+                                type="number"
+                                id="mobile"
+                                className="form-control"
+                                onInput={(evt)=>{changeHandler(evt)}}
+                              />
+                              <label
+                                className="form-label"
+                                htmlFor="mobile"
+                              >
+                                Your phone number
+                              </label>
+                            </div>
+                          </div>
+                          <div className="d-flex flex-row align-items-center mb-4">
+                            <i className="fas fa-lock fa-lg me-3 fa-fw" />
+                            <div className="form-outline flex-fill mb-0">
+                              <input
+                                type="password"
+                                id="pswd"
+                                className="form-control"
+                                onInput={(evt)=>{changeHandler(evt)}}
+                              />
+                              <label
+                                className="form-label"
+                                htmlFor="pswd"
+                              >
+                                Password
+                              </label>
+                            </div>
+                          </div>
+                          <div className="d-flex flex-row align-items-center mb-4">
+                            <i className="fas fa-key fa-lg me-3 fa-fw" />
+                            <div className="form-outline flex-fill mb-0">
+                              <input
+                                type="password"
+                                id="confPswd"
+                                className="form-control"
+                              />
+                              <label
+                                className="form-label"
+                                htmlFor="confPswd"
+                                onInput={(evt)=>{checkPswd(evt)}}
+                              >
+                                Repeat your password
+                              </label>
+                            </div>
+                          </div>
+                          <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                            <button
+                              type="button"
+                              className="btn btn-primary btn-lg"
+                              onClick={register}
+                            >
+                              Register
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                      <div className="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+                        <img
+                          src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+                          className="img-fluid"
+                          alt="Sample"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+}
+
+export default Register;
