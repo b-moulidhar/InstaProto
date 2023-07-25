@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../css/viewComp.css"
+import HeaderComp from "./header.comp";
 
 const UserUploads = () => {
   const [heroes, setHeroes] = useState([]);
@@ -73,6 +74,7 @@ const UserUploads = () => {
   return (
     <>
     <div className="container">
+    <HeaderComp/>
 
       {loading ? (
         <p>Loading...</p>

@@ -1,7 +1,7 @@
 {
-    "user":"hypervision",
-    "pass":"hypervisor@2001",
-    "dbname":"dhanushdb",
-    "dbhost":"20.127.252.227",
+    "user":"root",
+    "pass":"root",
+    "dbname":"localschema",
+    "dbhost":"localhost",
     "host":"localhost"
 }

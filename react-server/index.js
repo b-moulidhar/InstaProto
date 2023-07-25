@@ -22,10 +22,10 @@ const storage = multer.diskStorage({
   const upload = multer({ storage: storage });
 
 const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: 'root',
-  database: 'localschema',
+  host: config.dbhost,
+  user: config.user,
+  password: config.pass,
+  database: config.dbname,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -184,7 +184,7 @@ app.get("/getImages",verifyToken, (req, res) => {
       const blobName = result.filename;
       const blobType = result.filetype;
       const blobData = result.filedata.toString('binary');
-      fileDataArray.push({ uid: result.user_id, filename: blobName, filetype: blobType, filedata: blobData });
+      fileDataArray.push({ id:result.id , uid: result.user_id, filename: blobName, filetype: blobType, filedata: blobData });
     });
 
     // Send the file data as a response
@@ -242,12 +242,52 @@ app.post('/upload', [upload.single('file'), verifyToken], (req, res) => {
 
 //-----------------------------------------------------------------------------------------------------------------
 
-  app.post("/comments/:hid",(req,res)=>{
+  app.post("/comments",verifyToken,(req,res)=>{
 
-  })
+    const { image_id, cmts} = req.body;
+    const id = Math.ceil(Math.random()*10000);
+    const uid = req.headers.userid;
+    console.log(req.body);
+
+    const query = 'INSERT INTO comments (id, user_id, image_id, u_comment) VALUES (?, ?, ?, ?)';
+  pool.query(query, [id, uid, image_id, cmts], (err, result) => {
+    if (err) {
+      console.error('Error uploading file:', err);
+      return res.status(500).json({ error: 'Error uploading file' });
+    }
+
+    res.json({ message: 'File uploaded successfully' });
+  });
+});
 
 //-------------------------------------------------------------------------------------------------------------------
 
+app.delete("/comments", verifyToken, (req,res)=>{
+      const cmtId = req.headers.commentid;
+      console.log(cmtId)
+      const query = "DELETE FROM comments where id=?"
+      pool.query(query,[cmtId],(err,results)=>{
+        if (err) {
+          console.error('Error Deleting file:', err);
+          return res.status(500).json({ error: 'Error uploading file' });
+        }
+    
+        res.json({ message: 'Comment Deleted successfully' });
+      })
+})
+//-------------------------------------------------------------------------------------------------------------------
+app.get("/comments", verifyToken ,(req, res) => {
+  pool.query("SELECT * FROM comments", (err, results) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      return res.status(500).json({ error: 'Error fetching data from MySQL' });
+    }
+
+    return res.json(results);
+  });
+});
+//-------------------------------------------------------------------------------------------------------------------
+
 // Start the server
-app.listen(port, config.host, errorHandler);
+app.listen(port,errorHandler);
 console.log(`Server is now ready on ${config.host}:${port}`);

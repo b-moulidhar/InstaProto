@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { BrowserRouter, NavLink, Route,Routes} from "react-router-dom"
+import HeaderComp from "./header.comp";
 
 const UploadComp = () => {
   const [file, setFile] = useState(null);
@@ -37,16 +37,19 @@ const UploadComp = () => {
         }
         if(response.status==401){
           alert("please login again")
+          
         }
       })
       .catch((err) => {
         alert("please login again")
         console.log("Error ",err);
+        window.location.href = "/"
       });
   }
 
   return (
     <>
+    <HeaderComp/>
       <form onSubmit={sendImage}>
         <label htmlFor="file">Select a file:</label>
         <br />

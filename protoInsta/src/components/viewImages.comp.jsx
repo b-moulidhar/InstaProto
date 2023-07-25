@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../css/viewComp.css"
-import { NavLink } from "react-router-dom";
+import HeaderComp from "./header.comp";
 
 const ViewComp = () => {
   const [heroes, setHeroes] = useState([]);
+  const [allComments, setAllComments] = useState([]);
+  const [comments, setComments] = useState({ image_id:Number , cmts:"" });
   const [loading, setLoading] = useState(true);
+
   let token = localStorage.getItem("Authorization");
     let userId = localStorage.getItem("UserId"); 
   
@@ -17,12 +20,30 @@ const ViewComp = () => {
       } 
     }).then((res) => {
       setHeroes(res.data);
+      
+      axios.get("http://localhost:5000/comments",{
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "UserID": userId,
+      } 
+    }).then((res) => {
+      setAllComments(res.data);
+      console.log(res.data);
       setLoading(false);
     })
     .catch((err)=>{
       alert(err, "please login again")
     })
+
+    })
+    .catch((err)=>{
+      alert(err, "please login again")
+    })
   };
+  useEffect(() => {
+    console.log(comments);
+  }, [comments]);
+  
 
   useEffect(() => {
     refresh();
@@ -63,12 +84,66 @@ const ViewComp = () => {
     URL.revokeObjectURL(url);
   };
 
+  function comment(evt, imageId) {
+    setComments({ ...comments, image_id: imageId, cmts: evt.target.value });
+    console.log(comments);
+  }
+  function postComment(){
+    axios.post("http://localhost:5000/comments", comments,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "UserID": userId,
+      } 
+    })
+    .then((res)=>{
+      alert("posted successfully"  )
+      console.log(res.data)
+      refresh()
+    })
+    .catch((err)=>{
+      alert("Error", err)
+    })
+  }
+  function deleteComment(cmtId){
+    axios.delete("http://localhost:5000/comments",{
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "UserID": userId,
+        "commentId":cmtId
+      } 
+    })
+    .then((res)=>{
+      alert("posted successfully"  )
+      console.log(res.data)
+      refresh();
+    })
+    .catch((err)=>{
+      alert("Error", err)
+    })
+  }
+  const handleClick = (event, imageId) => {
+    // Get the clicked element
+    const element = event.target;
+    let top = element.offsetTop;
+    let left = element.offsetLeft;
+  
+    // Find the mainTag element for the corresponding imageId
+    const mainTag = document.querySelector(`.allComments_${imageId}`);
+    if (mainTag) {
+      // Apply styles to the clicked element
+      mainTag.style.display = "block";
+      mainTag.style.top = top + "px"; // Make sure to add "px" to the value
+      mainTag.style.left = left + "px"; // Make sure to add "px" to the value
+    }
+  };
+  
+  
+  
+
   return (
     <>
     <div className="container">
-    <NavLink end  to="uploads"><button className="btn primary">viewImages</button></NavLink>
-    <NavLink end  to="userImages"><button className="btn primary">upload a image</button></NavLink>
-
+      <HeaderComp/>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -77,7 +152,6 @@ const ViewComp = () => {
             {/* Render the individual properties of the hero object */}
             <img src={createBlobUrl(hero.filedata, hero.filetype)} alt={`Hero ${index}`} height="150px" width="150px" />
             <p>{hero.filename}</p>
-            <p>{hero.filetype}</p>
             {/* Render the image using createBlobUrl */}
             {hero.filetype === "application/pdf" && (
               <a href={createBlobUrl(hero.filedata, hero.filetype)} download={hero.filename}>
@@ -85,8 +159,26 @@ const ViewComp = () => {
               </a>
             )}
             {((hero.filetype === "image/jpeg")||(hero.filetype === "image/png"))&& <p>
+              <button onClick={(evt)=>handleClick(evt,hero.id)}>show all comments</button>
+              {
+                allComments.map((val,idx)=>{
+                  if(val.image_id == hero.id){
+                    return (
+                    <div key={idx} className={"allComments_"+val.image_id} style={{display:"none"}}>
+                      <p>{val.user_id}</p>
+                      <p>{val.u_comment}</p>
+                      {val.user_id==userId && <button onClick={()=>deleteComment(val.id)}>delete</button>}
+                    </div>
+                    )
+                  }
+
+                })
+              }
+
               comments: <br />
-              <input type="textbox" name="comment" id={hero.filename} />
+              <input type="textbox" name="comment" id={hero.filename} onInput={(evt)=>{comment(evt,hero.id)}}/>
+              <button onClick={postComment}>Post Comment</button>
+              {/* {(hero.uid === userId) && <button onClick={deleteComment}>delete comment</button>} */}
             </p>
             }
             {/* Don't forget to revoke the URL after the download link is clicked */}
