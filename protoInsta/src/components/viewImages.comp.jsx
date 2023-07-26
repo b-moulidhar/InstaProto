@@ -32,12 +32,14 @@ const ViewComp = () => {
       setLoading(false);
     })
     .catch((err)=>{
-      alert(err, "please login again")
+      alert(err, "please login again");
+      window.location = "/"
     })
 
     })
     .catch((err)=>{
       alert(err, "please login again")
+      window.location = "/"
     })
   };
   useEffect(() => {

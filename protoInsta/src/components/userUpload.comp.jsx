@@ -79,6 +79,7 @@ const UserUploads = () => {
       {loading ? (
         <p>Loading...</p>
       ) : (
+        heroes.length==0 ? <h2>No Images uploaded by you</h2>:
         heroes.map((hero, index) => (
           <div key={index} className="items">
             {/* Render the individual properties of the hero object */}

@@ -69,7 +69,7 @@ const [credentials, setCredentials] = useState({email:'', pswd:''});
                         <div className="pt-1 mb-4">
                             <button className="btn btn-dark btn-lg btn-block" type="button" onClick={login}>Login</button>
                         </div>
-                        <a className="small text-muted" href="#!">Forgot password?</a>
+                        <a className="small text-muted" href="forgot">Forgot password?</a>
                         <p className="mb-5 pb-lg-2" style={{color: '#393f81'}}>Don't have an account? <a href="register" style={{color: '#393f81'}}>Register here</a></p>
                         <a href="#!" className="small text-muted">Terms of use.</a>
                         <a href="#!" className="small text-muted">Privacy policy</a>

@@ -4,10 +4,16 @@ import HeaderComp from "./header.comp";
 
 const UploadComp = () => {
   const [file, setFile] = useState(null);
-  const[data,SetData] = useState()
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   function inputHandler(evt) {
+    const selectedFile = evt.target.files[0];
     setFile(evt.target.files[0]);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result);
+    };
+    reader.readAsDataURL(selectedFile);
   }
 
   function sendImage(e) {
@@ -49,14 +55,24 @@ const UploadComp = () => {
 
   return (
     <>
+    <div className="container">
     <HeaderComp/>
       <form onSubmit={sendImage}>
         <label htmlFor="file">Select a file:</label>
         <br />
         <input type="file" name="file" id="file" onChange={inputHandler} />
         <br />
+        {previewUrl && (
+          <img
+            src={previewUrl}
+            alt="Preview"
+            style={{ width: "150px", height: "150px" }}
+          />
+        )}
+        <br />
         <button type="submit">Upload File</button>
       </form>
+    </div>
     </>
   );
 };

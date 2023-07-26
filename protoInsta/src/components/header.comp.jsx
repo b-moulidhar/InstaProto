@@ -1,10 +1,15 @@
 import { NavLink } from "react-router-dom";
 function HeaderComp(){
+
+    function logout(){
+        localStorage.clear();
+        window.location = "/"
+    }
     return(
         <>
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
-                <a className="navbar-brand" href="/profilepage">Navbar</a>
+                <a className="navbar-brand" href="/profilepage">Home</a>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon" />
                 </button>
@@ -17,7 +22,7 @@ function HeaderComp(){
                     <NavLink end  to="/profilepage/userImages"><button className="btn primary">upload a image</button></NavLink>
                     </li>
                     <li className="nav-item dropdown">
-                    <button className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="true">
                         Dropdown
                     </button>
                     <ul className="dropdown-menu">
@@ -33,8 +38,8 @@ function HeaderComp(){
                 </ul>
                 <form className="d-flex" role="search">
                     <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                    <button className="btn btn-outline-success"><i class="bi bi-emoji-laughing"></i></button>
                 </form>
+                    <button className="btn btn-outline-success" onClick={logout}>logout</button>
                 </div>
             </div>
         </nav>

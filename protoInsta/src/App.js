@@ -6,6 +6,7 @@ import Login from './components/login.comp';
 import Register from './components/register.comp';
 import UserUploads from './components/userUpload.comp';
 import UploadComp from './components/upload.comp';
+import ForgetPass from './components/forgot.comp';
 
 function App() {
   return<>
@@ -22,6 +23,7 @@ function App() {
             <Routes>
                 <Route path="" element={<Login/>}/>
                 <Route path="register" element={<Register/>}/>
+                <Route path="forgot" element={<ForgetPass/>}/>
                 <Route path="profilepage" element={<ViewComp/>}/>
                 <Route path="profilepage/uploads" element={<UserUploads/>}/>
                 <Route path="profilepage/userImages" element={<UploadComp/>}/>
