@@ -35,7 +35,7 @@ const [credentials, setCredentials] = useState({email:'', pswd:''});
             }
         })
         .catch((err)=>{
-            alert(err)
+            alert("please enter correct credentials");
         })
     }
 

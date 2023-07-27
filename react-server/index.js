@@ -5,8 +5,15 @@ const multer  = require('multer');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const fs      = require('fs');
+const bodyParser = require('body-parser');
+const otpGenerator = require('otp-generator')
 const config = require("./lib/config.json");
 const errorHandler = require("./lib/utils").errorHandler;
+const accountSid = config.accountSid;
+const authToken = config.authToken;
+const twilioPhoneNumber = config.twilioPhoneNumber;
+const twilioClient  = require('twilio')(accountSid, authToken);
+
 
 const port = 5000;
 const app = express();
@@ -286,8 +293,94 @@ app.get("/comments", verifyToken ,(req, res) => {
     return res.json(results);
   });
 });
-//-------------------------------------------------------------------------------------------------------------------
 
+//-------------------------------------------------------------------------------------------------------------------
+const otpStorage = {};
+app.post('/generateOTP', (req, res) => {
+  const phoneNumber = req.body.phoneNumber; // The phone number to which OTP will be sent
+  console.log(req.body)
+
+  if (!phoneNumber) {
+    return res.status(400).json({ error: 'Phone number is missing' });
+  }
+
+  // Generate a 6-digit OTP
+  const otp = otpGenerator.generate(6, { upperCase: false, specialChars: false, alphabets: false });
+  otpStorage[phoneNumber] = otp;
+
+  // Create a promise for sending OTP via Twilio
+  const sendOTPPromise = new Promise((resolve, reject) => {
+    twilioClient.messages
+      .create({
+        body: `Your OTP is: ${otp}`,
+        from: twilioPhoneNumber,
+        to: `+91${phoneNumber}`, // Assuming the phone number is in India with country code +91
+      })
+      .then((message) => {
+        console.log(`OTP sent to ${message.to}: ${otp}`);
+        resolve();
+      })
+      .catch((error) => {
+        console.error('Error sending OTP:', error);
+        reject(error);
+      });
+  });
+
+  // Wait for the Twilio client to send the OTP before responding to the client
+  sendOTPPromise
+    .then(() => {
+      res.json({ message: 'OTP sent successfully' });
+    })
+    .catch((error) => {
+      res.status(500).json({ error: 'Error sending OTP' });
+    });
+});
+//-------------------------------------------------------------------------------------------------------------------
+// Assuming you already have the required dependencies and Twilio setup
+
+app.post('/verifyOTP', (req, res) => {
+  const phoneNumber = req.body.phoneNumber; // The phone number to which OTP was sent
+  const enteredOTP = req.body.otp; // The OTP entered by the user
+
+  // Here, you should have a mechanism to store the OTP sent to the user when you sent it.
+  // For simplicity, let's assume you have a global object that stores OTPs for each phone number.
+  // In a real-world scenario, you might use a database or cache to store OTPs.
+
+  // Check if the entered OTP matches the one sent to the user
+  const storedOTP = otpStorage[phoneNumber]; // otpStorage is an object that stores OTPs
+
+  if (storedOTP == enteredOTP) {
+    // OTP is verified successfully
+    console.log('otpStorage before deletion:', otpStorage)
+    delete otpStorage[phoneNumber]; // Remove the OTP from storage to prevent replay attacks
+    res.json({ message: 'OTP verified successfully' });
+  } else {
+    // Invalid OTP
+    res.status(401).json({ error: 'Invalid OTP' });
+  }
+});
+//-------------------------------------------------------------------------------------------------------------------
+app.post("/updatepass",(req,res)=>{
+const {npass,phno} = req.body;
+
+bcrypt.hash(npass, 2, (err, u_pswd) => {
+  if (err) {
+    console.error('Error hashing password:', err);
+    return;
+  }
+  const query = "UPDATE users SET u_pswd = ? WHERE mobile = ?" 
+  pool.query(query,[u_pswd,phno],(err,result)=>{
+    if(err){
+      console.error('Error updating file:', err);
+          return res.status(500).json({ error: 'Error updating file' });
+    }
+    res.json({message:"password updated successfully"})
+  })
+})
+
+
+})
+//-------------------------------------------------------------------------------------------------------------------
 // Start the server
 app.listen(port,errorHandler);
 console.log(`Server is now ready on ${config.host}:${port}`);
