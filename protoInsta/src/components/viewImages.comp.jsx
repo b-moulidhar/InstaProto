@@ -98,7 +98,9 @@ const ViewComp = () => {
       } 
     })
     .then((res)=>{
-      alert("posted successfully"  )
+      if(res.status==200){
+        alert("posted successfully")
+      }
       console.log(res.data)
       refresh()
     })
@@ -115,9 +117,11 @@ const ViewComp = () => {
       } 
     })
     .then((res)=>{
-      alert("posted successfully"  )
-      console.log(res.data)
-      refresh();
+      if(res.status==200){
+        alert("deleted successfully")
+        refresh();
+      }
+      console.log(res.status)
     })
     .catch((err)=>{
       alert("Error", err)
@@ -130,12 +134,15 @@ const ViewComp = () => {
     let left = element.offsetLeft;
   
     // Find the mainTag element for the corresponding imageId
-    const mainTag = document.querySelector(`.allComments_${imageId}`);
+    const mainTag = document.querySelectorAll(`.allComments_${imageId}`);
     if (mainTag) {
+      mainTag.forEach(element => {
+        
+        element.style.display = "block";
+        element.style.top = top + "px"; // Make sure to add "px" to the value
+        element.style.left = left + "px"; // Make sure to add "px" to the value
+      });
       // Apply styles to the clicked element
-      mainTag.style.display = "block";
-      mainTag.style.top = top + "px"; // Make sure to add "px" to the value
-      mainTag.style.left = left + "px"; // Make sure to add "px" to the value
     }
   };
   
@@ -160,22 +167,22 @@ const ViewComp = () => {
                 download
               </a>
             )}
-            {((hero.filetype === "image/jpeg")||(hero.filetype === "image/png"))&& <p>
               <button onClick={(evt)=>handleClick(evt,hero.id)}>show all comments</button>
+            {((hero.filetype === "image/jpeg")||(hero.filetype === "image/png"))&& <p>
               {
-                allComments.map((val,idx)=>{
-                  if(val.image_id == hero.id){
+                allComments.map((val, idx) => {
+                  if (val.image_id === hero.id) {
                     return (
-                    <div key={idx} className={"allComments_"+val.image_id} style={{display:"none"}}>
-                      <p>{val.user_id}</p>
-                      <p>{val.u_comment}</p>
-                      {val.user_id==userId && <button onClick={()=>deleteComment(val.id)}>delete</button>}
-                    </div>
-                    )
+                      <div key={idx} className={"allComments_" + val.image_id} style={{ display: "none" }}>
+                        <p><span>{val.user_id}</span>: <span>{val.u_comment}</span> &nbsp;
+                        {val.user_id === Number(userId) && <button className="btn btn-danger" onClick={() => deleteComment(val.id)}>delete</button>}
+                        </p>
+                      </div>
+                    );
                   }
-
                 })
               }
+
 
               comments: <br />
               <input type="textbox" name="comment" id={hero.filename} onInput={(evt)=>{comment(evt,hero.id)}}/>

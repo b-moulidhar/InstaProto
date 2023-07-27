@@ -1,4 +1,36 @@
+import { useState } from "react";
+import axios from "axios";
+
 function ForgetPass(){
+    localStorage.clear();
+    const [phno, setPhno] = useState("")
+    const inputHandler = function (evt) {
+        let ph = evt.target.value;
+        setPhno(ph); // Update phno with the entered value
+      };
+    
+      function sendPhone() {
+        if (phno.length !== 10) {
+          // Add a check for the phone number length (assuming you're using 10-digit phone numbers)
+          console.log("Invalid phone number");
+          return;
+        }
+    
+        console.log(phno);
+        localStorage.setItem("phno",phno)
+        axios
+          .post("http://localhost:5000/generateOTP", { phoneNumber: phno }) // Pass the phone number as an object in the request body
+          .then((res) => {
+            if(res.status==200){
+                window.location.href = "/forgot/otp"
+            }
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    
 
     return(
         <div class="container h-100">
@@ -16,16 +48,16 @@ function ForgetPass(){
 						<div class="card">
 							<div class="card-body">
 								<div class="m-sm-4">
-									<form>
-										<div class="form-group">
+									
+										<div >
 											<label>Phone</label>
-											<input class="form-control form-control-lg" type="text" name="phNum" placeholder="Enter your mobile number"/>
+											<input class="form-control form-control-lg" type="number" name="phNum" placeholder="Enter your mobile number" onChange={(evt)=>inputHandler(evt)}/>
 										</div>
 										<div class="text-center mt-3">
-											<button type="submit" class="btn btn-lg btn-primary">Reset password</button>&nbsp; &nbsp;
+											<button class="btn btn-lg btn-primary" onClick={sendPhone}>Reset password</button>&nbsp; &nbsp;
 											<a href="/" class="btn btn-lg btn-primary">Back to Login</a>
 										</div>
-									</form>
+									
 								</div>
 							</div>
 						</div>

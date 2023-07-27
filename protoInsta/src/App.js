@@ -7,6 +7,8 @@ import Register from './components/register.comp';
 import UserUploads from './components/userUpload.comp';
 import UploadComp from './components/upload.comp';
 import ForgetPass from './components/forgot.comp';
+import OtpComp from './components/otp.comp';
+import NewPass from './components/newPass.comp';
 
 function App() {
   return<>
@@ -24,6 +26,8 @@ function App() {
                 <Route path="" element={<Login/>}/>
                 <Route path="register" element={<Register/>}/>
                 <Route path="forgot" element={<ForgetPass/>}/>
+                <Route path="forgot/otp" element={<OtpComp/>}/>
+                <Route path="newpassword" element={<NewPass/>}/>
                 <Route path="profilepage" element={<ViewComp/>}/>
                 <Route path="profilepage/uploads" element={<UserUploads/>}/>
                 <Route path="profilepage/userImages" element={<UploadComp/>}/>
