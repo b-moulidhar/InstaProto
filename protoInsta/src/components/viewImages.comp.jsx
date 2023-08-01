@@ -2,15 +2,19 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../css/viewComp.css"
 import HeaderComp from "./header.comp";
+import { useSelector } from "react-redux";
 
 const ViewComp = () => {
   const [heroes, setHeroes] = useState([]);
   const [allComments, setAllComments] = useState([]);
   const [comments, setComments] = useState({ image_id:Number , cmts:"" });
   const [loading, setLoading] = useState(true);
+  // const token = useSelector(state=> state.authentication.token);
+   
 
   let token = localStorage.getItem("Authorization");
     let userId = localStorage.getItem("UserId"); 
+    const user_id = useSelector(state=> state.authentication.userId);
   
   const refresh = () => {
     axios.get("http://localhost:5000/getImages",{
@@ -20,6 +24,7 @@ const ViewComp = () => {
       } 
     }).then((res) => {
       setHeroes(res.data);
+      console.log(user_id)
       
       axios.get("http://localhost:5000/comments",{
       headers: {

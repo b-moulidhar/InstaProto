@@ -1,3 +1,4 @@
+import {SETTOKEN,SETUSER} from "../actions/action_types"
 const initialState = {
     token: '',
     userId: '',
@@ -5,12 +6,12 @@ const initialState = {
   
   const Authentication = (state = initialState, action) => {
     switch (action.type) {
-      case 'SET_TOKEN':
+      case SETTOKEN:
         return {
           ...state,
           token: action.payload,
         };
-      case 'SET_USER_ID':
+      case SETUSER:
         return {
           ...state,
           userId: action.payload,

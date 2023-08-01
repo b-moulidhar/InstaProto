@@ -1,0 +1,36 @@
+select * from users;
+select * from images;
+select * from comments;
+
+ 
+
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY,
+  u_name VARCHAR(30) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  mobile INTEGER NOT NULL, 
+  u_pswd VARCHAR(255) NOT NULL
+);
+
+ 
+
+CREATE TABLE images (
+  id INTEGER PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  filename VARCHAR(150),
+  filetype VARCHAR(150),
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+ALTER TABLE users
+MODIFY COLUMN mobile VARCHAR(11);
+ 
+
+CREATE TABLE comments (
+  id INTEGER PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  image_id INTEGER NOT NULL,
+  u_comment VARCHAR(300) NOT NULL,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY(image_id) REFERENCES images(id) ON DELETE CASCADE
+);
