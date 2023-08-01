@@ -1,9 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { isvalid , setMobile, setUser, setToken} from "../redux/actions/actions";
 
 
 // function Login({ history }){
 function Login(){
+    const token = useSelector(state=> state.authentication.token);
+    const user_id = useSelector(state=> state.authentication.userId);
+    const mobile = useSelector(state=> state.updation.phno);
+    let dispatch = useDispatch();
 const [credentials, setCredentials] = useState({email:'', pswd:''});
     const refresh = function(){
         axios.get("http://localhost:5000/login")
@@ -13,6 +19,7 @@ const [credentials, setCredentials] = useState({email:'', pswd:''});
     }
 
     useEffect(()=>{
+        console.log(mobile)
         refresh()
     },[])
 
@@ -25,16 +32,20 @@ const [credentials, setCredentials] = useState({email:'', pswd:''});
         .then((res)=>{
             alert(res.data.message)
 
+            dispatch(setToken(res.data.token))
+            dispatch(setUser(res.data.user))
+
             localStorage.setItem("Authorization",res.data.token);
             localStorage.setItem("UserId",res.data.user);
             
-            
+            console.log(token,user_id)
             if(res.status==200){
                 window.location.href ="/profilepage"
             // history.push("/uploadImage");
             }
         })
         .catch((err)=>{
+            console.log(err);
             alert("please enter correct credentials");
         })
     }

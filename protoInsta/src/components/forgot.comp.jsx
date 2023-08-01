@@ -1,13 +1,22 @@
 import { useState } from "react";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { clearStore, setMobile } from "../redux/actions/actions";
 
 function ForgetPass(){
     localStorage.clear();
+    let dispatch = useDispatch();
+    const token = useSelector(state=> state.authentication.token);
+    const user_id = useSelector(state=> state.authentication.userId);
+    const mobile = useSelector(state=> state.updation.phno);
+    console.log(token,user_id)
+    dispatch(clearStore());
     const [phno, setPhno] = useState("")
     const inputHandler = function (evt) {
         let ph = evt.target.value;
         setPhno(ph); // Update phno with the entered value
       };
+      console.log(token,user_id)
     
       function sendPhone() {
         if (phno.length !== 10) {
@@ -16,11 +25,13 @@ function ForgetPass(){
           return;
         }
     
-        console.log(phno);
+        // console.log(phno);
         localStorage.setItem("phno",phno)
+        dispatch(setMobile(phno))
         axios
           .post("http://localhost:5000/generateOTP", { phoneNumber: phno }) // Pass the phone number as an object in the request body
           .then((res) => {
+              
             if(res.status==200){
                 window.location.href = "/forgot/otp"
             }
@@ -29,6 +40,7 @@ function ForgetPass(){
           .catch((err) => {
             console.log(err);
           });
+          console.log(mobile)
       }
     
 

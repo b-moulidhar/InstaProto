@@ -1,3 +1,4 @@
+import {SETPHNO,SETVALID} from "../actions/action_types"
 const initialState = {
     isValid: false,
     phno: "",
@@ -5,12 +6,12 @@ const initialState = {
   
   const updation = (state = initialState, action) => {
     switch (action.type) {
-      case 'SET_IS_VALID':
+      case SETVALID:
         return {
           ...state,
           isValid: action.payload,
         };
-      case 'SET_PHNO':
+      case SETPHNO:
         return {
           ...state,
           phno: action.payload,
