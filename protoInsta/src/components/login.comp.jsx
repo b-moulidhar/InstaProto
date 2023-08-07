@@ -38,9 +38,9 @@ const [credentials, setCredentials] = useState({email:'', pswd:''});
             localStorage.setItem("Authorization",res.data.token);
             localStorage.setItem("UserId",res.data.user);
             
-            console.log(token,user_id)
+            
             if(res.status==200){
-                window.location.href ="/profilepage"
+                // window.location.href ="/profilepage"
             // history.push("/uploadImage");
             }
         })
@@ -48,6 +48,7 @@ const [credentials, setCredentials] = useState({email:'', pswd:''});
             console.log(err);
             alert("please enter correct credentials");
         })
+        console.log(token,user_id)
     }
 
     return(

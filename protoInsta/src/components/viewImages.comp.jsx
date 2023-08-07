@@ -9,7 +9,7 @@ const ViewComp = () => {
   const [allComments, setAllComments] = useState([]);
   const [comments, setComments] = useState({ image_id:Number , cmts:"" });
   const [loading, setLoading] = useState(true);
-  // const token = useSelector(state=> state.authentication.token);
+  const ctoken = useSelector(state=> state.authentication.token);
    
 
   let token = localStorage.getItem("Authorization");
@@ -24,7 +24,7 @@ const ViewComp = () => {
       } 
     }).then((res) => {
       setHeroes(res.data);
-      console.log(user_id)
+      console.log(user_id,ctoken)
       
       axios.get("http://localhost:5000/comments",{
       headers: {
