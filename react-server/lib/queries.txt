@@ -24,6 +24,9 @@ CREATE TABLE images (
 
 ALTER TABLE users
 MODIFY COLUMN mobile VARCHAR(11);
+
+ALTER TABLE images
+ADD filedata longblob;
  
 
 CREATE TABLE comments (
