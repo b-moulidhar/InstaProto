@@ -203,6 +203,22 @@ app.get("/getImages",verifyToken, (req, res) => {
 });
 //-----------------------------------------------------------------------------------------------------------------------
 
+app.delete("/deleteUsrUpload",verifyToken, (req,res)=>{
+  const imgId = req.headers.imgid;
+  let queries = "DELETE FROM images WHERE id = ?"
+  pool.query(queries,[imgId],(err,results)=>{
+    if (err) {
+      console.error('Error deleting element:', err);
+      res.status(500).json({ error: 'Error deleting element' });
+    } else {
+      console.log('Deleted successfully',results);
+      res.status(200).json({ message: 'Deleted successfully' });
+    }
+  })
+})
+
+//-----------------------------------------------------------------------------------------------------------------------
+
 app.post('/create', (req, res) => {
     const { name, age } = req.body;
   
@@ -242,7 +258,7 @@ app.post('/upload', [upload.single('file'), verifyToken], (req, res) => {
       return res.status(500).json({ error: 'Error uploading file' });
     }
     fs.unlinkSync(file.path);
-
+    
     res.json({ message: 'File uploaded successfully' });
   });
 });

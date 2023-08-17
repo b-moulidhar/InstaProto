@@ -9,6 +9,8 @@ const ViewComp = () => {
   const [allComments, setAllComments] = useState([]);
   const [comments, setComments] = useState({ image_id:Number , cmts:"" });
   const [loading, setLoading] = useState(true);
+  const [hideCmt, setHideCmt] = useState();
+  const [showCmt, setShowCmt] = useState();
   const ctoken = useSelector(state=> state.authentication.token);
    
 
@@ -95,7 +97,10 @@ const ViewComp = () => {
     setComments({ ...comments, image_id: imageId, cmts: evt.target.value });
     console.log(comments);
   }
-  function postComment(){
+  function postComment(hid){
+    let element = document.getElementById(hid);
+    element.value = ""
+      console.log(element)
     axios.post("http://localhost:5000/comments", comments,{
       headers: {
         Authorization: `Bearer ${token}`,
@@ -103,6 +108,7 @@ const ViewComp = () => {
       } 
     })
     .then((res)=>{
+      
       if(res.status==200){
         alert("posted successfully")
       }
@@ -110,6 +116,7 @@ const ViewComp = () => {
       refresh()
     })
     .catch((err)=>{
+      console.log(err)
       alert("Error", err)
     })
   }
@@ -132,7 +139,14 @@ const ViewComp = () => {
       alert("Error", err)
     })
   }
-  const handleClick = (event, imageId) => {
+  const handleShowClick = (event, imageId) => {
+
+    
+    let showBtn = document.getElementById(event.target.id);
+    let hideBtn = document.getElementById("hideCmtBtn"+imageId);
+      showBtn.style.display = "none"
+      hideBtn.style.display = "flex"
+    setHideCmt(imageId)
     // Get the clicked element
     const element = event.target;
     let top = element.offsetTop;
@@ -143,9 +157,31 @@ const ViewComp = () => {
     if (mainTag) {
       mainTag.forEach(element => {
         
-        element.style.display = "block";
+        element.style.display = "flex";
         element.style.top = top + "px"; // Make sure to add "px" to the value
         element.style.left = left + "px"; // Make sure to add "px" to the value
+      });
+      // Apply styles to the clicked element
+    }
+  };
+
+  const handleHideClick = (event, imageId) => {
+
+    setShowCmt(imageId)
+
+    let showBtn = document.getElementById("showCmtBtn"+imageId);
+    let hideBtn = document.getElementById(event.target.id);
+    showBtn.style.display = "flex"
+    hideBtn.style.display = "none"
+    setHideCmt(undefined)
+    // Get the clicked element
+    // Find the mainTag element for the corresponding imageId
+    const mainTag = document.querySelectorAll(`.allComments_${imageId}`);
+    if (mainTag) {
+      mainTag.forEach(element => {
+        
+        element.style.display = "none";
+       
       });
       // Apply styles to the clicked element
     }
@@ -164,7 +200,7 @@ const ViewComp = () => {
         heroes.map((hero, index) => (
           <div key={index} className="items">
             {/* Render the individual properties of the hero object */}
-            <img src={createBlobUrl(hero.filedata, hero.filetype)} alt={`Hero ${index}`} height="150px" width="150px" />
+            <img src={createBlobUrl(hero.filedata, hero.filetype)} alt={`Hero ${index}`} height="250px" width="230px" />
             <p>{hero.filename}</p>
             {/* Render the image using createBlobUrl */}
             {hero.filetype === "application/pdf" && (
@@ -172,15 +208,22 @@ const ViewComp = () => {
                 download
               </a>
             )}
-              <button onClick={(evt)=>handleClick(evt,hero.id)}>show all comments</button>
-            {((hero.filetype === "image/jpeg")||(hero.filetype === "image/png"))&& <p>
+            {/* {
+              (showCmt == hero.id) &&
+              <button onClick={(evt)=>handleShowClick(evt,hero.id)} class="showCmtBtn">show all comments</button>
+            } */}
+            <button onClick={(evt)=>handleShowClick(evt,hero.id)} id={"showCmtBtn"+hero.id}>show all comments</button>
+            {
+              <button onClick={(evt)=>handleHideClick(evt,hero.id)} id={"hideCmtBtn"+hero.id} style={{display:"none"}}>hide all comments</button>
+            }
+            {((hero.filetype === "image/jpeg")||(hero.filetype === "image/png"))&& <p id="cmntsSection">
               {
                 allComments.map((val, idx) => {
                   if (val.image_id === hero.id) {
                     return (
                       <div key={idx} className={"allComments_" + val.image_id} style={{ display: "none" }}>
-                        <p><span>{val.user_id}</span>: <span>{val.u_comment}</span> &nbsp;
-                        {val.user_id === Number(userId) && <button className="btn btn-danger" onClick={() => deleteComment(val.id)}>delete</button>}
+                        <p className="cmnt"><span>{val.user_id}</span>: <span>{val.u_comment}</span> &nbsp;
+                        {val.user_id === Number(userId) && <button id="deleteCmntBtn" onClick={() => deleteComment(val.id)}>delete</button>}
                         </p>
                       </div>
                     );
@@ -190,8 +233,8 @@ const ViewComp = () => {
 
 
               comments: <br />
-              <input type="textbox" name="comment" id={hero.filename} onInput={(evt)=>{comment(evt,hero.id)}}/>
-              <button onClick={postComment}>Post Comment</button>
+              <input type="textbox" name="comment" id={hero.id} onInput={(evt)=>{comment(evt,hero.id)}}/>
+              <button onClick={()=>postComment(hero.id)} id="postCmntBtn">Post Comment</button>
               {/* {(hero.uid === userId) && <button onClick={deleteComment}>delete comment</button>} */}
             </p>
             }

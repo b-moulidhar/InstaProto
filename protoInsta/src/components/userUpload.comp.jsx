@@ -29,6 +29,7 @@ const UserUploads = () => {
     })
     .catch((err)=>{
         alert(err, "please login again")
+        window.location.href = "/"
     })
   };
 
@@ -71,6 +72,24 @@ const UserUploads = () => {
     URL.revokeObjectURL(url);
   };
 
+  function deleteImage(id){
+
+      axios.delete("http://localhost:5000/deleteUsrUpload",{
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "UserID": userId,
+          "imgid":id
+        } 
+      })
+      .then((res)=>{
+        refresh();
+        console.log(res)
+      })
+      .catch((err)=>{
+        console.log(err)
+      })
+  }
+
   return (
     <>
     <div className="container">
@@ -92,12 +111,17 @@ const UserUploads = () => {
                 download
               </a>
             )}
+            {console.log(hero.uid,userId)}
+            {
+              hero.uid == userId &&
+            <button onClick={()=>deleteImage(hero.id)}>delete image</button>
+            }
             {/* {((hero.filetype === "image/jpeg")||(hero.filetype === "image/png"))&& <p>
               comments: <br />
               <input type="textbox" name="comment" id={hero.filename} />
             </p>
             } */}
-            {/* Don't forget to revoke the URL after the download link is clicked */}
+           
             {hero.filetype === "application/pdf" && revokeBlobUrl(createBlobUrl(hero.filedata, hero.filetype))}
           </div>
         ))

@@ -40,7 +40,7 @@ const [credentials, setCredentials] = useState({email:'', pswd:''});
             
             
             if(res.status==200){
-                // window.location.href ="/profilepage"
+                window.location.href ="/profilepage"
             // history.push("/uploadImage");
             }
         })

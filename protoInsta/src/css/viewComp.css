@@ -2,24 +2,55 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
+    gap: 0.3rem;
     width: 100%;
 }
 .items{
+    background-color: antiquewhite;
     display: flex;
     flex-direction: column;
     align-items: center;
+    align-self: center;
     float: left;
     border: 1px solid;
     height: max-content;
-    width: 100%;
+    width: 90%;
+}
+.items>img{
+    margin-top: 10px;
 }
 input[type="textbox"]{
     margin: 2%;
     height: 50%;
-    width: 80%;
+    width: 60%;
 }
 
 .allComments{
     position: absolute;
+    
+}
+
+#cmntsSection{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+    width: 80%;
+}
+#postCmntBtn{
+    align-self: center;
+}
+.cmnt{
+    font-size: small;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#deleteCmntBtn{
+    margin-top: 0px;
+    border-radius: 45%;
+    color: aliceblue;
+    font-size: x-small;
+    align-items: center;
+    background-color: red;
 }

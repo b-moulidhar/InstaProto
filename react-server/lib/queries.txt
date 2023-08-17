@@ -12,7 +12,6 @@ CREATE TABLE users (
   u_pswd VARCHAR(255) NOT NULL
 );
 
- 
 
 CREATE TABLE images (
   id INTEGER PRIMARY KEY,
