@@ -146,7 +146,7 @@ function register(){
                               </label>
                             </div>
                           </div>
-                          <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                          <div className="justify-content-center mx-4 mb-3 mb-lg-4">
                             <button
                               type="button"
                               className="btn btn-primary btn-lg"
@@ -154,6 +154,8 @@ function register(){
                             >
                               Register
                             </button>
+                            &nbsp;
+                            <p className="mb-5 pb-lg-2" style={{color: '#393f81'}}>already have an account? <a href="/" style={{color: '#393f81'}}>login</a></p>
                           </div>
                         </form>
                       </div>

@@ -387,7 +387,8 @@ bcrypt.hash(npass, 2, (err, u_pswd) => {
   }
   const query = "UPDATE users SET u_pswd = ? WHERE mobile = ?" 
   pool.query(query,[u_pswd,phno],(err,result)=>{
-    if(err){
+    console.log(result,"hello"+phno);
+    if(result.changedRows==0){
       console.error('Error updating file:', err);
           return res.status(500).json({ error: 'Error updating file' });
     }

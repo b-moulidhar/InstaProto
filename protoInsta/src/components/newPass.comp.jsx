@@ -22,7 +22,9 @@ function NewPass(){
                 if(res.status ==200){
                     localStorage.clear()
                     console.log(res.data);
-                }
+                }else if(res.status ==500){
+					console.log("phone number not found")
+				}
               })
               .catch((err) => {
                 console.log(err);
