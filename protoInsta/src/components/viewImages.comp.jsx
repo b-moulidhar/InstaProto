@@ -200,7 +200,7 @@ const ViewComp = () => {
         heroes.map((hero, index) => (
           <div key={index} className="items">
             {/* Render the individual properties of the hero object */}
-            <img src={createBlobUrl(hero.filedata, hero.filetype)} alt={`Hero ${index}`} height="250px" width="230px" />
+            <img src={createBlobUrl(hero.filedata, hero.filetype)} alt={`Hero ${index}`} />
             <p>{hero.filename}</p>
             {/* Render the image using createBlobUrl */}
             {hero.filetype === "application/pdf" && (
@@ -212,11 +212,14 @@ const ViewComp = () => {
               (showCmt == hero.id) &&
               <button onClick={(evt)=>handleShowClick(evt,hero.id)} class="showCmtBtn">show all comments</button>
             } */}
-            <button onClick={(evt)=>handleShowClick(evt,hero.id)} id={"showCmtBtn"+hero.id}>show all comments</button>
+            <button onClick={(evt)=>handleShowClick(evt,hero.id)} id={"showCmtBtn"+hero.id} className="showBtnCmt">show all comments</button>
             {
-              <button onClick={(evt)=>handleHideClick(evt,hero.id)} id={"hideCmtBtn"+hero.id} style={{display:"none"}}>hide all comments</button>
+              <button onClick={(evt)=>handleHideClick(evt,hero.id)} id={"hideCmtBtn"+hero.id} className="hideBtnCmt" style={{display:"none"}}>hide all comments</button>
             }
+              
+
             {((hero.filetype === "image/jpeg")||(hero.filetype === "image/png"))&& <p id="cmntsSection">
+              <div className="allCmnt">
               {
                 allComments.map((val, idx) => {
                   if (val.image_id === hero.id) {
@@ -230,14 +233,16 @@ const ViewComp = () => {
                   }
                 })
               }
+              </div>
 
 
-              comments: <br />
+              any comments? <br />
               <input type="textbox" name="comment" id={hero.id} onInput={(evt)=>{comment(evt,hero.id)}}/>
               <button onClick={()=>postComment(hero.id)} id="postCmntBtn">Post Comment</button>
               {/* {(hero.uid === userId) && <button onClick={deleteComment}>delete comment</button>} */}
             </p>
             }
+         
             {/* Don't forget to revoke the URL after the download link is clicked */}
             {hero.filetype === "application/pdf" && revokeBlobUrl(createBlobUrl(hero.filedata, hero.filetype))}
           </div>

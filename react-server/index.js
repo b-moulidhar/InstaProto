@@ -252,7 +252,8 @@ app.post('/upload', [upload.single('file'), verifyToken], (req, res) => {
 
   // Insert the file data into the database
   const query = 'INSERT INTO images (id, user_id, filename, filetype, filedata) VALUES (?, ?, ?, ?, ?)';
-  pool.query(query, [id, uid, file.filename, file.mimetype, fileData], (err, result) => {
+  const result = (file.filename).replace(/-.*/, '');
+  pool.query(query, [id, uid, result, file.mimetype, fileData], (err, result) => {
     if (err) {
       console.error('Error uploading file:', err);
       return res.status(500).json({ error: 'Error uploading file' });
@@ -399,4 +400,4 @@ bcrypt.hash(npass, 2, (err, u_pswd) => {
 //-------------------------------------------------------------------------------------------------------------------
 // Start the server
 app.listen(port,errorHandler);
-console.log(`Server is now ready on ${config.host}:${port}`);
+console.log(`Server is now ready on:${port}`);

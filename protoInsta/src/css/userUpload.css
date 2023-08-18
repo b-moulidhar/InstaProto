@@ -1,0 +1,36 @@
+.container{
+    display: flex;
+    flex-direction: column;
+}
+.allUserUploads{
+    gap: 0.6rem;
+    display: flex;
+}
+
+.uploads{
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    background-color: rgb(223, 227, 211);
+    border-radius: 0%;
+    align-items: center;
+}
+
+.uploads img{
+    margin-top: 10px;
+    width: 95%;
+    height: 250px;
+}
+
+.uploads:hover{
+    transform: scale(0.95);
+}
+.deleteUploadBtn{
+    font-size: 12px;
+    border: none;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    align-self: center;
+    margin-bottom: 10px;
+    background-color: rgb(199, 20, 20);
+    color: aliceblue;
+}

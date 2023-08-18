@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "../css/viewComp.css"
+import "../css/userUpload.css"
 import HeaderComp from "./header.comp";
 
 const UserUploads = () => {
@@ -97,12 +97,13 @@ const UserUploads = () => {
 
       {loading ? (
         <p>Loading...</p>
-      ) : (
+      ) : <div className="allUserUploads">
+        {
         heroes.length==0 ? <h2>No Images uploaded by you</h2>:
         heroes.map((hero, index) => (
-          <div key={index} className="items">
+          <div key={index} className="uploads">
             {/* Render the individual properties of the hero object */}
-            <img src={createBlobUrl(hero.filedata, hero.filetype)} alt={`Hero ${index}`} height="150px" width="150px" />
+            <img src={createBlobUrl(hero.filedata, hero.filetype)} alt={`Hero ${index}`} />
             <p>{hero.filename}</p>
             <p>{hero.filetype}</p>
             {/* Render the image using createBlobUrl */}
@@ -114,7 +115,7 @@ const UserUploads = () => {
             {console.log(hero.uid,userId)}
             {
               hero.uid == userId &&
-            <button onClick={()=>deleteImage(hero.id)}>delete image</button>
+            <button onClick={()=>deleteImage(hero.id)} className="deleteUploadBtn">delete upload</button>
             }
             {/* {((hero.filetype === "image/jpeg")||(hero.filetype === "image/png"))&& <p>
               comments: <br />
@@ -125,7 +126,10 @@ const UserUploads = () => {
             {hero.filetype === "application/pdf" && revokeBlobUrl(createBlobUrl(hero.filedata, hero.filetype))}
           </div>
         ))
-      )}
+        }
+      </div>
+      
+      }
     </div>
     </>
   );

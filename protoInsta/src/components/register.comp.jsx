@@ -4,6 +4,7 @@ import { useState } from "react";
 function Register(){
 const [confPswd, setConfPswd] = useState(false);
 const [user,setUser] = useState({name :'', email:'', mobile:'', pswd:'' })
+const [finalUser, setFinalUser] = useState();
 
 
 function changeHandler(evt){
@@ -11,21 +12,20 @@ function changeHandler(evt){
 }
 
 function checkPswd(evt){
-    if(user.pswd === evt.target.value){
-        setConfPswd(true);
+    if(user.pswd == evt.target.value){
+      setFinalUser(user);
         console.log("password match");
-    }
-    if(confPswd){
-        changeHandler();
     }else{
-        alert("Password doesn't match")
+      alert("Password Doesn't match");
     }
+   
 }
 
 function register(){
-    console.log("hello")
-    if(user.name!=''){
-        axios.post("http://localhost:5000/register",user)
+  
+    // console.log(finalUser,user)
+    if(finalUser.name!=''){
+        axios.post("http://localhost:5000/register",finalUser)
         .then((res)=>{
             console.log(res)
             if(res.status==201){
@@ -42,6 +42,8 @@ function register(){
             console.log("Error ",err)
             alert(err)
         })
+    }else{
+      alert("Password does not match");
     }
 }
     return (
@@ -133,11 +135,12 @@ function register(){
                                 type="password"
                                 id="confPswd"
                                 className="form-control"
+                                onBlur={(evt)=>{checkPswd(evt)}}
                               />
                               <label
                                 className="form-label"
                                 htmlFor="confPswd"
-                                onInput={(evt)=>{checkPswd(evt)}}
+                               
                               >
                                 Repeat your password
                               </label>

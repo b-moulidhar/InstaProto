@@ -1,1 +1,9 @@
-
+{
+    "dbhost":"127.0.0.1",
+    "dbname":"instaproto",
+    "pass":"moulisri",
+    "user":"moulidharb",
+    "accountSid":"AC6c62cc5d112191cc7d76989e5e1ad1b8",
+    "authToken":"e0aa7e0fe76d9ba0dcdf76c153d983b4",
+    "twilioPhoneNumber":"+15392142814"
+}

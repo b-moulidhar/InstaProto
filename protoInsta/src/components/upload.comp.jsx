@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import "../css/upload.css"
 import HeaderComp from "./header.comp";
 
 const UploadComp = () => {
@@ -7,6 +8,7 @@ const UploadComp = () => {
   const [previewUrl, setPreviewUrl] = useState(null);
 
   function inputHandler(evt) {
+    setPreviewUrl(null);
     const selectedFile = evt.target.files[0];
     setFile(evt.target.files[0]);
     const reader = new FileReader();
@@ -66,7 +68,7 @@ const UploadComp = () => {
           <img
             src={previewUrl}
             alt="Preview"
-            style={{ width: "150px", height: "150px" }}
+            style={{ width: "250px", height: "200px" }}
           />
         )}
         <br />
