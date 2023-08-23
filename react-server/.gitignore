@@ -6,5 +6,5 @@ node_modules/
 
 #ignore json file
 config.json
-
-.json
+/config.json
+/.json
