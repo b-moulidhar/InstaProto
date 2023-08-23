@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
+import "../css/register.css"
 
 function Register(){
 const [confPswd, setConfPswd] = useState(false);
 const [user,setUser] = useState({name :'', email:'', mobile:'', pswd:'' })
 const [finalUser, setFinalUser] = useState();
+const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
 
 
 function changeHandler(evt){
@@ -13,7 +15,14 @@ function changeHandler(evt){
 
 function checkPswd(evt){
     if(user.pswd == evt.target.value){
-      setFinalUser(user);
+      if(passwordRegex.test(user.pswd)){
+        console.log("good password")
+        setFinalUser(user);
+      }else{
+        let req = document.getElementsByClassName("pswdReq")[0];
+        req.style.display = "block"
+        console.log("password does not meet the requirement");
+      }
         console.log("password match");
     }else{
       alert("Password Doesn't match");
@@ -27,10 +36,12 @@ function register(){
     if(finalUser.name!=''){
         axios.post("http://localhost:5000/register",finalUser)
         .then((res)=>{
+          localStorage.setItem("user",finalUser);
             console.log(res)
             if(res.status==201){
                 alert("Resgistered successfully");
-                window.location.href = "/";
+                window.location.href = "/forgot/otp"
+                // window.location.href = "/";
             }else if(res.status == 500){
                 alert("email already exits");
             }
@@ -126,6 +137,12 @@ function register(){
                               >
                                 Password
                               </label>
+                              <p className="pswdReq" style={{display:"none"}}>
+                              <p>* must have atleast 8 characters <br />
+                               must have atleast 1 numberic character <br />
+                               must have atleast 1 special characters</p>
+
+                              </p>
                             </div>
                           </div>
                           <div className="d-flex flex-row align-items-center mb-4">

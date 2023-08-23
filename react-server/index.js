@@ -92,6 +92,47 @@ const otpGenrator = (data)=>{
 
 }
 
+const sendOtpMail = async function(emails,req,res){
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: config.adminEmail,
+      pass: "kmtgppxjbarncwyp"
+    }
+  });
+  let otp = otpGenrator(emails);
+
+  try {
+    const result = await transporter.sendMail({
+      from: config.yahooEmail,
+      to: emails,
+      subject: 'OTP',
+      text: `OTP is ${otp}`
+    });
+    console.log("Email sent:", result.response);
+    res.status(250).json('OTP sent successfully' );
+
+  } catch (err) {
+    console.error("Error sending email:", err);
+  }
+}
+
+const verifyOtpMail = function(data,otp,res){
+  const enteredOTP = otp; // The OTP entered by the user
+ 
+  const storedOTP = otpStorage[data]; // otpStorage is an object that stores OTPs
+
+  if (storedOTP == enteredOTP) {
+    // OTP is verified successfully
+    console.log('otpStorage before deletion:', otpStorage)
+    delete otpStorage[data]; // Remove the OTP from storage to prevent replay attacks
+    res.json({ message: 'OTP verified successfully' });
+  } else {
+    // Invalid OTP
+    res.status(401).json({ error: 'Invalid OTP' });
+  }
+}
+
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -172,8 +213,7 @@ app.post('/register',(req,res)=>{
     if (err) {
       console.error('Error hashing password:', err);
       return;
-    }
-   
+    }   
 
     let id = Math.random()*10000
     const query = "insert into users (id, u_name, email, mobile, u_pswd) VALUES (?, ?, ?, ?, ?)"
@@ -373,25 +413,32 @@ app.post('/generateOTP',(req, res) => {
 // Assuming you already have the required dependencies and Twilio setup
 
 app.post('/verifyOTP', (req, res) => {
-  const phoneNumber = req.body.phoneNumber; // The phone number to which OTP was sent
+  if(!req.body.phoneNumber){
+    const data = req.body.phoneNumber
+  }else{
+    const data = req.body.email
+  }
+  // const phoneNumber = req.body.phoneNumber; // The phone number to which OTP was sent
   const enteredOTP = req.body.otp; // The OTP entered by the user
+  // const enteredEmail = req.body.email; 
+  verifyOtpMail(data,enteredOTP,res);
 
   // Here, you should have a mechanism to store the OTP sent to the user when you sent it.
   // For simplicity, let's assume you have a global object that stores OTPs for each phone number.
   // In a real-world scenario, you might use a database or cache to store OTPs.
 
   // Check if the entered OTP matches the one sent to the user
-  const storedOTP = otpStorage[phoneNumber]; // otpStorage is an object that stores OTPs
+//   const storedOTP = otpStorage[data]; // otpStorage is an object that stores OTPs
 
-  if (storedOTP == enteredOTP) {
-    // OTP is verified successfully
-    console.log('otpStorage before deletion:', otpStorage)
-    delete otpStorage[phoneNumber]; // Remove the OTP from storage to prevent replay attacks
-    res.json({ message: 'OTP verified successfully' });
-  } else {
-    // Invalid OTP
-    res.status(401).json({ error: 'Invalid OTP' });
-  }
+//   if (storedOTP == enteredOTP) {
+//     // OTP is verified successfully
+//     console.log('otpStorage before deletion:', otpStorage)
+//     delete otpStorage[data]; // Remove the OTP from storage to prevent replay attacks
+//     res.json({ message: 'OTP verified successfully' });
+//   } else {
+//     // Invalid OTP
+//     res.status(401).json({ error: 'Invalid OTP' });
+//   }
 });
 //-------------------------------------------------------------------------------------------------------------------
 app.post("/updatepass",(req,res)=>{
@@ -436,33 +483,35 @@ app.post("/sendEmail", async (req, res)=> {
       }else{
 
         if (users[0].email == emails) {
-          try {
-            const result = await transporter.sendMail({
-              from: config.yahooEmail,
-              to: emails,
-              subject: 'OTP',
-              text: `OTP is ${otp}`
-            });
-            console.log("Email sent:", result.response);
-            res.status(250).json('OTP sent successfully' );
+
+          sendOtpMail(emails,req,res)
+          // try {
+          //   const result = await transporter.sendMail({
+          //     from: config.yahooEmail,
+          //     to: emails,
+          //     subject: 'OTP',
+          //     text: `OTP is ${otp}`
+          //   });
+          //   console.log("Email sent:", result.response);
+          //   res.status(250).json('OTP sent successfully' );
   
-          } catch (err) {
-            console.error("Error sending email:", err);
-          }
+          // } catch (err) {
+          //   console.error("Error sending email:", err);
+          // }
         } else {
           console.log("user does not exist");
         }
       }
     });
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: config.adminEmail,
-        pass: "kmtgppxjbarncwyp"
-      }
-    });
-    let otp = otpGenrator(emails);
+    // const transporter = nodemailer.createTransport({
+    //   service: 'gmail',
+    //   auth: {
+    //     user: config.adminEmail,
+    //     pass: "kmtgppxjbarncwyp"
+    //   }
+    // });
+    // let otp = otpGenrator(emails);
     // try {
     //   const result = await transporter.sendMail({
     //     from: config.yahooEmail,
