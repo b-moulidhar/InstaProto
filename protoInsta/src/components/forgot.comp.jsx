@@ -13,7 +13,7 @@ function ForgetPass(){
     dispatch(clearStore());
     const [phno, setPhno] = useState("");
     const [email, setEmail] = useState("");
-    const [option, setOption] = useState("");
+    const [option, setOption] = useState("email");
 
     const phoneHandler = function (evt) {
       let ph = evt.target.value;
@@ -46,7 +46,7 @@ function ForgetPass(){
           axios
             .post("http://localhost:5000/generateOTP", { phoneNumber: phno }) // Pass the phone number as an object in the request body
             .then((res) => {
-                
+                console.log(res.status);
               if(res.status==200){
                   window.location.href = "/forgot/otp"
               }
@@ -74,7 +74,7 @@ function ForgetPass(){
             alert(res.data);
           if(res.status==250){
             console.log(res.data)
-              // window.location.href = "/forgot/otp"
+              window.location.href = "/forgot/otp"
           }
         })
       }
@@ -117,7 +117,7 @@ function ForgetPass(){
 								<div className="m-sm-4">
 									<div>
                     <input type="radio" name="option" id="phno" value="Phone" onChange={(evt)=>optionSelector(evt.target.value)} /> <label htmlFor="phno">Phone</label>
-                    <input type="radio" name="option" id="eml" value="Email" onChange={(evt)=>optionSelector(evt.target.value)} /> <label htmlFor="eml">email</label> 
+                    <input type="radio" name="option" id="eml" value="Email" defaultChecked onChange={(evt)=>optionSelector(evt.target.value)} /> <label htmlFor="eml">email</label> 
                   </div>
                   {(option == "Phone")?
 										<div >

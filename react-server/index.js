@@ -117,16 +117,16 @@ const sendOtpMail = async function(emails,req,res){
   }
 }
 
-const verifyOtpMail = function(data,otp,res){
+const verifyOtpMail = async function(data,otp,res){
   const enteredOTP = otp; // The OTP entered by the user
- 
-  const storedOTP = otpStorage[data]; // otpStorage is an object that stores OTPs
-
+  var storedOTP = otpStorage[data]; // otpStorage is an object that stores OTPs
+  console.log(storedOTP)
+  console.log(storedOTP == enteredOTP);
   if (storedOTP == enteredOTP) {
     // OTP is verified successfully
     console.log('otpStorage before deletion:', otpStorage)
     delete otpStorage[data]; // Remove the OTP from storage to prevent replay attacks
-    res.json({ message: 'OTP verified successfully' });
+     res.json({ message: 'OTP verified successfully' });
   } else {
     // Invalid OTP
     res.status(401).json({ error: 'Invalid OTP' });
@@ -379,8 +379,7 @@ app.post('/generateOTP',(req, res) => {
   }
 
   // Generate a 6-digit OTP
-  const otp = otpGenerator.generate(6, { upperCase: false, specialChars: false, alphabets: false });
-  otpStorage[phoneNumber] = otp;
+  let otp = otpGenrator(phoneNumber);
 
   // Create a promise for sending OTP via Twilio
   const sendOTPPromise = new Promise((resolve, reject) => {
@@ -413,13 +412,17 @@ app.post('/generateOTP',(req, res) => {
 // Assuming you already have the required dependencies and Twilio setup
 
 app.post('/verifyOTP', (req, res) => {
-  if(!req.body.phoneNumber){
-    const data = req.body.phoneNumber
+  var data
+  console.log(req.body);
+  if(!req.body.phno){
+    data = req.body.email
   }else{
-    const data = req.body.email
+    data = req.body.phno
   }
+
   // const phoneNumber = req.body.phoneNumber; // The phone number to which OTP was sent
-  const enteredOTP = req.body.otp; // The OTP entered by the user
+  const enteredOTP = req.body.Otp; // The OTP entered by the user
+  console.log(enteredOTP);
   // const enteredEmail = req.body.email; 
   verifyOtpMail(data,enteredOTP,res);
 

@@ -2,14 +2,14 @@ import { useState } from "react";
 import axios from "axios";
 
 function OtpComp(){
-    const [Otp, setOtp] = useState(Number);
+    const [Otp, setOtp] = useState();
     const phno = localStorage.getItem("phno");
     const email = localStorage.getItem("email");
    function inputHandler(evt){
     let otp=evt.target.value 
-    if(Number(otp)!=NaN){
-        setOtp(Number(otp));
-    }
+    
+        setOtp(otp);
+    
    }
     function checkOtp(){
         axios.post("http://localhost:5000/verifyOTP",{Otp,phno,email})
@@ -18,10 +18,12 @@ function OtpComp(){
                 console.log(res.data)
                 localStorage.setItem("validotp",true);
                 window.location = "/newpassword"
-            }
+            }else{
+				console.log(res.data)
+			}
         })
         .catch((err)=>{
-            console.log(err)
+            alert("invalid otp");
         })
     }
 
