@@ -3,11 +3,13 @@ const mysql = require('mysql2');
 const cors = require("cors");
 const multer  = require('multer');
 const bcrypt = require('bcrypt');
+const nodemailer = require("nodemailer")
 const jwt = require("jsonwebtoken");
 const fs      = require('fs');
 const bodyParser = require('body-parser');
 const otpGenerator = require('otp-generator')
 const config = require("./lib/config.json");
+const { Auth, LoginCredentials } = require("two-step-auth");
 const errorHandler = require("./lib/utils").errorHandler;
 const accountSid = config.accountSid;
 const authToken = config.authToken;
@@ -73,6 +75,22 @@ const verifyToken = (req, res, next) => {
     next();
   });
 };
+
+const otpStorage = {};
+
+const otpGenrator = (data)=>{
+
+  // Generate a 6-digit OTP
+    const otp = otpGenerator.generate(6, { 
+      alphabets: false ,       // Exclude alphabetic characters
+      upperCase: false,       // Exclude uppercase letters
+      specialChars: false    // Exclude special characters
+    });
+    
+  otpStorage[data] = otp;
+  return otp;
+
+}
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -312,8 +330,7 @@ app.get("/comments", verifyToken ,(req, res) => {
 });
 
 //-------------------------------------------------------------------------------------------------------------------
-const otpStorage = {};
-app.post('/generateOTP', (req, res) => {
+app.post('/generateOTP',(req, res) => {
   const phoneNumber = req.body.phoneNumber; // The phone number to which OTP will be sent
   console.log(req.body)
 
@@ -398,7 +415,96 @@ bcrypt.hash(npass, 2, (err, u_pswd) => {
 
 
 })
+
 //-------------------------------------------------------------------------------------------------------------------
+
+app.post("/sendEmail", async (req, res)=> {
+    const emails = req.body.email;
+    console.log("clicked", emails);
+
+    pool.query("SELECT email FROM users WHERE email = ?", [emails], async (err, results) => {
+      if (err) {
+        console.error("Error executing query:", err);
+        return res.status(500).json({ error: "Error fetching data from MySQL" });
+      }
+
+      const users = results;
+      console.log(results[0])
+      if(users[0] == undefined){
+        console.log("user does not exist ");
+        res.json("user does not exist")
+      }else{
+
+        if (users[0].email == emails) {
+          try {
+            const result = await transporter.sendMail({
+              from: config.yahooEmail,
+              to: emails,
+              subject: 'OTP',
+              text: `OTP is ${otp}`
+            });
+            console.log("Email sent:", result.response);
+            res.status(250).json('OTP sent successfully' );
+  
+          } catch (err) {
+            console.error("Error sending email:", err);
+          }
+        } else {
+          console.log("user does not exist");
+        }
+      }
+    });
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: config.adminEmail,
+        pass: "kmtgppxjbarncwyp"
+      }
+    });
+    let otp = otpGenrator(emails);
+    // try {
+    //   const result = await transporter.sendMail({
+    //     from: config.yahooEmail,
+    //     to: emails,
+    //     subject: 'OTP',
+    //     text: `OTP is ${otp}`
+    //   });
+    //   console.log("Email sent:", result.response);
+    //   res.status(250).json({ message: 'OTP sent successfully' });
+    // } catch (err) {
+    //   console.error("Error sending email:", err);
+    // }
+  })
+//-------------------------------------------------------------------------------------------------------------------
+// app.post("/verifyEmail",async (req,res)=>{
+//   try {
+//     const res = await Auth("moulivijay999@gmail.com", "Company Name");
+//     console.log(res);
+//     console.log(res.mail);
+//     console.log(res.OTP);
+//     console.log(res.success);
+//   } catch (error) {
+//     console.log(error);
+//   }
+
+
+//   // This should have less secure apps enabled
+//   LoginCredentials.mailID = config.adminEmail; 
+    
+//   // You can store them in your env variables and
+//   // access them, it will work fine
+//   LoginCredentials.password = config.adminPass; 
+//   LoginCredentials.use = true;
+    
+//   // Pass in the mail ID you need to verify
+//   // login("moulivijay999@gmail.com");
+// }
+  
+// )
+
+//-------------------------------------------------------------------------------------------------------------------
+
 // Start the server
 app.listen(port,errorHandler);
 console.log(`Server is now ready on:${port}`);

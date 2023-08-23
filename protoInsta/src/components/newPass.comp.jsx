@@ -22,6 +22,7 @@ function NewPass(){
                 if(res.status ==200){
                     localStorage.clear()
                     console.log(res.data);
+					window.location.href = "/"
                 }else if(res.status ==500){
 					console.log("phone number not found")
 				}

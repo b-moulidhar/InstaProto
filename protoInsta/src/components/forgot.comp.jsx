@@ -12,18 +12,25 @@ function ForgetPass(){
    
     dispatch(clearStore());
     const [phno, setPhno] = useState("");
+    const [email, setEmail] = useState("");
+    const [option, setOption] = useState("");
 
-    const inputHandler = function (evt) {
+    const phoneHandler = function (evt) {
       let ph = evt.target.value;
       setPhno(ph); // Update phno with the entered value
       
       };
+    const emailHandler = function (evt) {
+      let ph = evt.target.value;
+      setEmail(ph); // Update phno with the entered value
+      
+      };
       // console.log(token,user_id)
+
     
       async function sendPhone(e) {
         e.preventDefault()
         console.log(phno)
-        localStorage.setItem("phno", phno);
         if (phno.length !== 10) {
           // Add a check for the phone number length (assuming you're using 10-digit phone numbers)
           console.log("Invalid phone number");
@@ -56,6 +63,40 @@ function ForgetPass(){
             // console.log(mobile)
         
       }
+
+      function sendEmail(e){
+        localStorage.setItem("email",email)
+        console.log(email)
+        e.preventDefault()
+        axios
+        .post("http://localhost:5000/sendEmail",{email:email}) // Pass the phone number as an object in the request body
+        .then((res) => {
+            alert(res.data);
+          if(res.status==250){
+            console.log(res.data)
+              // window.location.href = "/forgot/otp"
+          }
+        })
+      }
+
+      const clickHandler = function(e){
+        if(option){
+          console.log(typeof option)
+          console.log(option == "phone");
+          if(option == "Phone"){
+            sendPhone(e);
+          }else{
+            sendEmail(e)
+          }
+        }else{
+          console.log("please select an option");
+        }
+      }
+
+      const optionSelector = function(options){
+          setOption(options)
+          console.log(option);
+      }
     
 
     return(
@@ -74,14 +115,23 @@ function ForgetPass(){
 						<div className="card">
 							<div className="card-body">
 								<div className="m-sm-4">
-									
+									<div>
+                    <input type="radio" name="option" id="phno" value="Phone" onChange={(evt)=>optionSelector(evt.target.value)} /> <label htmlFor="phno">Phone</label>
+                    <input type="radio" name="option" id="eml" value="Email" onChange={(evt)=>optionSelector(evt.target.value)} /> <label htmlFor="eml">email</label> 
+                  </div>
+                  {(option == "Phone")?
 										<div >
 											<label>Phone</label>
-											<input className="form-control form-control-lg" type="number" name="phNum" placeholder="Enter your mobile number" onBlur={(evt)=>inputHandler(evt)}/>
+											<input className="form-control form-control-lg" type="number" name="phNum" placeholder="Enter your mobile number" onBlur={(evt)=>phoneHandler(evt)}/>
+										</div>:<div >
+											<label>Email</label>
+											<input className="form-control form-control-lg" type="email" name="email" placeholder="Enter your Email" onBlur={(evt)=>emailHandler(evt)}/>
 										</div>
+                  }
 										<div className="text-center mt-3">
-											<button className="btn btn-lg btn-primary" onClick={(evt)=>sendPhone(evt)}>Reset password</button>&nbsp; &nbsp;
+											<button className="btn btn-lg btn-primary" onClick={(evt)=>clickHandler(evt)}>Reset password</button>&nbsp; &nbsp;
 											<a href="/" className="btn btn-lg btn-primary">Back to Login</a>
+											{/* <button className="btn btn-lg btn-primary" onClick={(evt)=>clickHandler(evt)}>send mail</button>&nbsp; &nbsp; */}
 										</div>
 									
 								</div>

@@ -2,8 +2,9 @@ import { useState } from "react";
 import axios from "axios";
 
 function OtpComp(){
-    const [Otp, setOtp] = useState(Number)
-    const phno = localStorage.getItem("phno")
+    const [Otp, setOtp] = useState(Number);
+    const phno = localStorage.getItem("phno");
+    const email = localStorage.getItem("email");
    function inputHandler(evt){
     let otp=evt.target.value 
     if(Number(otp)!=NaN){
@@ -11,7 +12,7 @@ function OtpComp(){
     }
    }
     function checkOtp(){
-        axios.post("http://localhost:5000/verifyOTP",{Otp,phno})
+        axios.post("http://localhost:5000/verifyOTP",{Otp,phno,email})
         .then((res)=>{
             if(res.status===200){
                 console.log(res.data)
