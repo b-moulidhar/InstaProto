@@ -97,7 +97,7 @@ const sendOtpMail = async function(emails,req,res){
     service: 'gmail',
     auth: {
       user: config.adminEmail,
-      pass: "kmtgppxjbarncwyp"
+      pass: config.pswd
     }
   });
   let otp = otpGenrator(emails);
