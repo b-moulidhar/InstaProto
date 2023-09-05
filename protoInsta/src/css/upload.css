@@ -1,4 +1,32 @@
-form{
+#uploadForm{
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 500px;
     align-self: center;
     align-items: center;
+
+    background: hsla(152, 52%, 40%, 1);
+    background: linear-gradient(90deg, hsla(152, 52%, 40%, 1) 0%, hsla(72, 52%, 74%, 1) 100%);
+    background: -moz-linear-gradient(90deg, hsla(152, 52%, 40%, 1) 0%, hsla(72, 52%, 74%, 1) 100%);
+    background: -webkit-linear-gradient(90deg, hsla(152, 52%, 40%, 1) 0%, hsla(72, 52%, 74%, 1) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#309A68", endColorstr="#D1DF99", GradientType=1 );
+}
+
+input[type="file"]::file-selector-button{
+    margin: 5px;
+    border-radius: 10px;
+    background-color: white;
+    color: black;
+    border: 2px solid rgb(223, 52, 52); 
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+button[type="submit"]{
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background-color: white;
+    color: black;
+    border: 2px solid #4CAF50; 
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }

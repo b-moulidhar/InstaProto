@@ -10,12 +10,16 @@ const UploadComp = () => {
   function inputHandler(evt) {
     setPreviewUrl(null);
     const selectedFile = evt.target.files[0];
-    setFile(evt.target.files[0]);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreviewUrl(reader.result);
-    };
-    reader.readAsDataURL(selectedFile);
+    if(selectedFile==undefined){
+      alert("no file chosen")
+    }else{
+      setFile(evt.target.files[0]);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
   }
 
   function sendImage(e) {
@@ -59,7 +63,7 @@ const UploadComp = () => {
     <>
     <div className="container">
     <HeaderComp/>
-      <form onSubmit={sendImage}>
+      <form id="uploadForm" onSubmit={sendImage}>
         <label htmlFor="file">Select a file:</label>
         <br />
         <input type="file" name="file" id="file" onChange={inputHandler} />

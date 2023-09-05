@@ -46,7 +46,7 @@ function OtpComp(){
 									
 										<div c>
 											<label>otp</label>
-											<input class="form-control form-control-lg" type="text" name="phNum" placeholder="Enter your mobile number" onInput={(evt)=>inputHandler(evt)}/>
+											<input class="form-control form-control-lg" type="text" name="phNum" placeholder="Enter your Otp" onInput={(evt)=>inputHandler(evt)}/>
 										</div>
 										<div class="text-center mt-3">
 											<button  class="btn btn-lg btn-primary" onClick={checkOtp}>submit</button>&nbsp; &nbsp;
