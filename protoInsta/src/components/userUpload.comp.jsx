@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../css/userUpload.css"
 import HeaderComp from "./header.comp";
+import Swal from 'sweetalert2'
 
 const UserUploads = () => {
   const [heroes, setHeroes] = useState([]);
@@ -24,6 +25,8 @@ const UserUploads = () => {
     })
     if(tempData.length!=0){
         setHeroes(tempData); 
+    }else if(tempData.length == 0){
+      setHeroes([]);
     }
       setLoading(false);
     })
@@ -73,21 +76,39 @@ const UserUploads = () => {
   };
 
   function deleteImage(id){
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+  }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Deleted!',
+          'Your file has been deleted.',
+          'success'
+      )
+          axios.delete("http://localhost:5000/deleteUsrUpload",{
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "UserID": userId,
+              "imgid":id
+            } 
+          })
+          .then((res)=>{
+            refresh();
+            console.log(res)
+          })
+          .catch((err)=>{
+            console.log(err)
+          })
+      }
+  })
 
-      axios.delete("http://localhost:5000/deleteUsrUpload",{
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "UserID": userId,
-          "imgid":id
-        } 
-      })
-      .then((res)=>{
-        refresh();
-        console.log(res)
-      })
-      .catch((err)=>{
-        console.log(err)
-      })
+     
   }
 
   return (

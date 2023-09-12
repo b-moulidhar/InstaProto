@@ -19,6 +19,7 @@
 .uploads img{
     margin-top: 10px;
     width: 95%;
+    max-width: 250px;
     height: 250px;
 }
 

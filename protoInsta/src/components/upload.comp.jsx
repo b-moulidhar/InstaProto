@@ -44,7 +44,9 @@ const UploadComp = () => {
       .then((response) => {
         console.log(response);
         if(response.status===200){
-
+          setPreviewUrl(null);
+          setFile(null)
+          document.getElementById("file").value = "";
           alert("data added successfully")
         }
         if(response.status==401){
