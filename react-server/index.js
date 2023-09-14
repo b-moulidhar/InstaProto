@@ -62,6 +62,7 @@ app.use(express.static(__dirname + "/public"))
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
   const uid = req.headers.userid
+
   if (!token && !uid) {
     return res.status(401).json({ error: "No token provided" });
   }
@@ -216,8 +217,8 @@ app.post('/register',(req,res)=>{
     }   
 
     let id = Math.random()*10000
-    const query = "insert into users (id, u_name, email, mobile, u_pswd) VALUES (?, ?, ?, ?, ?)"
-      pool.query(query, [id,name, email, mobile, u_pswd], (err, result) => {
+    const query = "insert into users (id, u_name, email, mobile, u_pswd,profilepic) VALUES (?, ?, ?, ?, ?,?)"
+      pool.query(query, [id,name, email, mobile, u_pswd,null], (err, result) => {
         if (err) {
           console.error('Error inserting new element:', err);
           res.status(500).json({ error: 'Error inserting new element' });
@@ -426,22 +427,6 @@ app.post('/verifyOTP', (req, res) => {
   // const enteredEmail = req.body.email; 
   verifyOtpMail(data,enteredOTP,res);
 
-  // Here, you should have a mechanism to store the OTP sent to the user when you sent it.
-  // For simplicity, let's assume you have a global object that stores OTPs for each phone number.
-  // In a real-world scenario, you might use a database or cache to store OTPs.
-
-  // Check if the entered OTP matches the one sent to the user
-//   const storedOTP = otpStorage[data]; // otpStorage is an object that stores OTPs
-
-//   if (storedOTP == enteredOTP) {
-//     // OTP is verified successfully
-//     console.log('otpStorage before deletion:', otpStorage)
-//     delete otpStorage[data]; // Remove the OTP from storage to prevent replay attacks
-//     res.json({ message: 'OTP verified successfully' });
-//   } else {
-//     // Invalid OTP
-//     res.status(401).json({ error: 'Invalid OTP' });
-//   }
 });
 //-------------------------------------------------------------------------------------------------------------------
 app.post("/updatepass",(req,res)=>{
@@ -488,75 +473,87 @@ app.post("/sendEmail", async (req, res)=> {
         if (users[0].email == emails) {
 
           sendOtpMail(emails,req,res)
-          // try {
-          //   const result = await transporter.sendMail({
-          //     from: config.yahooEmail,
-          //     to: emails,
-          //     subject: 'OTP',
-          //     text: `OTP is ${otp}`
-          //   });
-          //   console.log("Email sent:", result.response);
-          //   res.status(250).json('OTP sent successfully' );
-  
-          // } catch (err) {
-          //   console.error("Error sending email:", err);
-          // }
         } else {
           console.log("user does not exist");
         }
       }
     });
 
-    // const transporter = nodemailer.createTransport({
-    //   service: 'gmail',
-    //   auth: {
-    //     user: config.adminEmail,
-    //     pass: "kmtgppxjbarncwyp"
-    //   }
-    // });
-    // let otp = otpGenrator(emails);
-    // try {
-    //   const result = await transporter.sendMail({
-    //     from: config.yahooEmail,
-    //     to: emails,
-    //     subject: 'OTP',
-    //     text: `OTP is ${otp}`
-    //   });
-    //   console.log("Email sent:", result.response);
-    //   res.status(250).json({ message: 'OTP sent successfully' });
-    // } catch (err) {
-    //   console.error("Error sending email:", err);
-    // }
   })
-//-------------------------------------------------------------------------------------------------------------------
-// app.post("/verifyEmail",async (req,res)=>{
-//   try {
-//     const res = await Auth("moulivijay999@gmail.com", "Company Name");
-//     console.log(res);
-//     console.log(res.mail);
-//     console.log(res.OTP);
-//     console.log(res.success);
-//   } catch (error) {
-//     console.log(error);
-//   }
-
-
-//   // This should have less secure apps enabled
-//   LoginCredentials.mailID = config.adminEmail; 
-    
-//   // You can store them in your env variables and
-//   // access them, it will work fine
-//   LoginCredentials.password = config.adminPass; 
-//   LoginCredentials.use = true;
-    
-//   // Pass in the mail ID you need to verify
-//   // login("moulivijay999@gmail.com");
-// }
-  
-// )
 
 //-------------------------------------------------------------------------------------------------------------------
 
+app.get('/profileDetails',verifyToken,(req,res)=>{
+  const uid = req.headers.userid;
+  const query = "SELECT id,u_name,email,mobile,profilepic from users where id = ?"
+  pool.query(query,[uid],(err,result)=>{
+    if (err) {
+      console.error('Error executing query:', err);
+      return res.status(500).json({ error: 'Error fetching data from MySQL' });
+    }
+    // console.log(result)
+    const fileDataArray=[];
+     var blobData;
+    if(result[0].profilepic==null){
+      blobData=null;
+      console.log("inside if",blobData)
+    }else{
+      blobData = result[0].profilepic.toString('binary');
+    }
+    if(blobData || blobData==null){
+      fileDataArray.push({ id:result[0].id, u_name:result[0].u_name , email:result[0].email, mobile:result[0].mobile, profilepic:blobData })
+    }
+    if(fileDataArray.length>0){
+      console.log(fileDataArray)
+      return res.json(fileDataArray);
+    }
+  })
+})
+
+//-------------------------------------------------------------------------------------------------------------------
+
+app.post('/profilePicUpload', [upload.single('file'), verifyToken], (req, res) => {
+  const file = req.file;
+  const uid = req.headers.userid;
+  let id = Math.random() * 1000;
+
+  if (!file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  // Convert the file to binary data
+  const fileBuffer = fs.readFileSync(file.path);
+  const fileData = fileBuffer.toString('base64');
+
+  // Insert the file data into the database
+  const query = "UPDATE users SET profilepic = ? WHERE id = ?"
+  const result = (file.filename).replace(/-.*/, '');
+  console.log(fileData);
+  pool.query(query, [fileData,uid], (err, result) => {
+    if (err) {
+      console.error('Error uploading file:', err);
+      return res.status(500).json({ error: 'Error uploading file' });
+    }
+    fs.unlinkSync(file.path);
+    
+    res.json({ message: 'File uploaded successfully' });
+  });
+});
+//-------------------------------------------------------------------------------------------------------------------
+app.delete("/profilepicDelete",verifyToken, (req,res)=>{
+  const uid = req.headers.userid;
+  let queries = "UPDATE users SET profilepic = ? WHERE id = ?"
+  pool.query(queries,[null,uid],(err,results)=>{
+    if (err) {
+      console.error('Error deleting element:', err);
+      res.status(500).json({ error: 'Error deleting element' });
+    } else {
+      console.log('Deleted successfully',results);
+      res.status(200).json({ message: 'Deleted successfully' });
+    }
+  })
+})
+//-------------------------------------------------------------------------------------------------------------------
 // Start the server
 app.listen(port,errorHandler);
 console.log(`Server is now ready on:${port}`);

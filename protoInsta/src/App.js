@@ -9,6 +9,8 @@ import UploadComp from './components/upload.comp';
 import ForgetPass from './components/forgot.comp';
 import OtpComp from './components/otp.comp';
 import NewPass from './components/newPass.comp';
+import ProfileComp from './components/profile.comp';
+import ProfilePicUpload from './components/profilePicUpload.comp';
 
 function App() {
   return<>
@@ -28,9 +30,11 @@ function App() {
                 <Route path="forgot" element={<ForgetPass/>}/>
                 <Route path="forgot/otp" element={<OtpComp/>}/>
                 <Route path="newpassword" element={<NewPass/>}/>
-                <Route path="profilepage" element={<ViewComp/>}/>
-                <Route path="profilepage/uploads" element={<UserUploads/>}/>
-                <Route path="profilepage/userImages" element={<UploadComp/>}/>
+                <Route path="HomePage" element={<ViewComp/>}/>
+                <Route path="homePage/uploads" element={<UserUploads/>}/>
+                <Route path="homePage/userImages" element={<UploadComp/>}/>
+                <Route path="homePage/profile" element={<ProfileComp/>}/>
+                <Route path="homePage/profile/picUpload" element={<ProfilePicUpload/>}/>
                 {/* <Route path="viewImages" element={<ViewComp/>}/> */}
                 <Route path="testing" element={<TableComp/>}/>
             </Routes>

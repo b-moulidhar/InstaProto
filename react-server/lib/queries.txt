@@ -27,6 +27,8 @@ MODIFY COLUMN mobile VARCHAR(11);
 ALTER TABLE images
 ADD filedata longblob;
  
+ALTER TABLE users
+ADD profilepic longblob;
 
 CREATE TABLE comments (
   id INTEGER PRIMARY KEY,

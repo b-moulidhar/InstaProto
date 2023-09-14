@@ -6,9 +6,11 @@ const Api = axios.create({
 
 Api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('Authorization');
+    const userId = localStorage.getItem("UserId"); 
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers["UserID"]= userId;
     }
     return config;
   },
@@ -24,12 +26,12 @@ Api.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       // Handle unauthorized error
-      localStorage.removeItem('token');
-      window.location.href = '/login';
-    } else if (!error.response) {
-      // Handle network error
-      console.log('Network Error');
-    }
+      window.location.href = '/';
+    } 
+    // else if (!error.response) {
+    //   // Handle network error
+    //   console.log('Network Error');
+    // }
     return Promise.reject(error);
   }
 );

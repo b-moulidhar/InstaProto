@@ -1,25 +1,48 @@
 import { NavLink } from "react-router-dom";
+import Swal from 'sweetalert2'
 function HeaderComp(){
 
     function logout(){
-        localStorage.clear();
-        window.location = "/"
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You will be logged out of this session!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, logout!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'logged Out!',
+                    'you have been successfully logged out',
+                    'success'
+                ).then(()=>{                 
+                    localStorage.clear();
+                    window.location = "/"
+                })      
+            }
+        })
+        
     }
     return(
         <>
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
-            <NavLink end  to="/profilepage"><button className="btn primary">Home</button></NavLink>
+            <NavLink end  to="/homePage"><button className="btn primary">Home</button></NavLink>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon" />
                 </button>
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                     <li className="nav-item">
-                    <NavLink end  to="/profilepage/uploads"><button className="btn primary">viewImages</button></NavLink>
+                    <NavLink end  to="/homePage/uploads"><button className="btn primary">viewImages</button></NavLink>
                     </li>
                     <li className="nav-item">
-                    <NavLink end  to="/profilepage/userImages"><button className="btn primary">upload a image</button></NavLink>
+                    <NavLink end  to="/homePage/userImages"><button className="btn primary">upload a image</button></NavLink>
+                    </li>
+                    <li className="nav-item">
+                    <NavLink end  to="/homePage/profile"><button className="btn primary">profile</button></NavLink>
                     </li>
                     </ul>
                
