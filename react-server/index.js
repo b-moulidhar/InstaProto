@@ -140,7 +140,7 @@ const verifyOtpMail = async function(data,otp,res){
 
 // READ
 app.get("/data", verifyToken ,(req, res) => {
-  pool.query("SELECT * FROM images", (err, results) => {
+  pool.query("SELECT * FROM users", (err, results) => {
     if (err) {
       console.error('Error executing query:', err);
       return res.status(500).json({ error: 'Error fetching data from MySQL' });
@@ -216,7 +216,7 @@ app.post('/register',(req,res)=>{
       return;
     }   
 
-    let id = Math.random()*10000
+    let id = Math.ceil(Math.random()*10000);
     const query = "insert into users (id, u_name, email, mobile, u_pswd,profilepic) VALUES (?, ?, ?, ?, ?,?)"
       pool.query(query, [id,name, email, mobile, u_pswd,null], (err, result) => {
         if (err) {
@@ -299,7 +299,7 @@ app.post('/create', (req, res) => {
 app.post('/upload', [upload.single('file'), verifyToken], (req, res) => {
   const file = req.file;
   const uid = req.headers.userid;
-  let id = Math.random() * 1000;
+  let id = Math.ceil(Math.random() * 10000);
 
   if (!file) {
     return res.status(400).json({ error: 'No file uploaded' });
@@ -515,7 +515,7 @@ app.get('/profileDetails',verifyToken,(req,res)=>{
 app.post('/profilePicUpload', [upload.single('file'), verifyToken], (req, res) => {
   const file = req.file;
   const uid = req.headers.userid;
-  let id = Math.random() * 1000;
+  let id = Math.ceil(Math.random() * 100000);
 
   if (!file) {
     return res.status(400).json({ error: 'No file uploaded' });
@@ -553,6 +553,63 @@ app.delete("/profilepicDelete",verifyToken, (req,res)=>{
     }
   })
 })
+//-------------------------------------------------------------------------------------------------------------------
+app.get("/getLikes",verifyToken,(req,res)=>{
+  const queries = "select * from likes"
+  pool.query(queries,(err,result)=>{
+    if(err){
+      console.error('Error executing query:', err);
+      return res.status(500).json({ error: 'Error fetching data' });
+    }
+    return res.json(result);
+  })
+})
+//-------------------------------------------------------------------------------------------------------------------
+app.post("/postLikes", verifyToken, (req, res) => {
+  const uid = req.headers.userid;
+  const imgId = req.body.imageId;
+  const id = Math.ceil(Math.random() * 1000000000);
+
+  // Step 1: Check if the combination of u_id and image_id already exists
+  const querySelect = "SELECT u_id, image_id FROM likes WHERE u_id = ? AND image_id = ?";
+  pool.query(querySelect, [uid, imgId], (err, results) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      return res.status(500).json({ error: 'Error fetching data' });
+    }
+
+    // Step 2: Check the query result
+    if (results.length === 0) {
+      // The combination does not exist, so insert the new like
+      const insertQuery = "INSERT INTO likes (id, u_id, image_id) VALUES (?, ?, ?)";
+      pool.query(insertQuery, [id, uid, imgId], (insertErr, insertResult) => {
+        if (insertErr) {
+          console.error('Error executing query:', insertErr);
+          return res.status(500).json({ error: 'Error inserting data' });
+        }
+        return res.json(insertResult);
+      });
+    } else {
+      // The combination already exists, return a message
+      console.log("Already liked");
+      return res.status(201).json({ error: 'Already liked' });
+    }
+  });
+});
+//-------------------------------------------------------------------------------------------------------------------
+app.delete("/unPostLikes",verifyToken,(req,res)=>{
+  const uid = req.headers.userid
+  const imagId = req.headers.imageid
+  const queries = "DELETE FROM likes WHERE u_id = ? AND image_id = ?;"
+  pool.query(queries,[uid,imagId],(err,result)=>{
+    if(err){
+      console.error('Error executing query:', err);
+      return res.status(500).json({ error: 'Error fetching data' });
+    }
+    return res.json(result);
+  })
+})
+
 //-------------------------------------------------------------------------------------------------------------------
 // Start the server
 app.listen(port,errorHandler);

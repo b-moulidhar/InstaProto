@@ -121,6 +121,8 @@ let ProfileComp = ()=>{
 
   
     return <>
+    <div className="container">
+
     <HeaderComp/>
     <NavLink end to="/homePage/profile/picUpload" id="picUpload"></NavLink>
     {console.log()}
@@ -161,6 +163,7 @@ let ProfileComp = ()=>{
                 <div  id="insertPic" onClick={(evt)=>{changeImage(evt)}}>Insert Pic</div>
                 <div  id="deletePic" onClick={(evt)=>{changeImage(evt)}}>Delete Pic</div>
             </div>
+    </div>
    
     </>
                

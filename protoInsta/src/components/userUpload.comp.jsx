@@ -125,7 +125,7 @@ const UserUploads = () => {
         <p>Loading...</p>
       ) : <div className="allUserUploads">
         {
-        heroes.length==0 ? <h2>No Images uploaded by you</h2>:
+        heroes.length==0 ? <h2 id="noImage">No Images uploaded by you</h2>:
         heroes.map((hero, index) => (
           <div key={index} className="uploads">
             {/* Render the individual properties of the hero object */}

@@ -13,6 +13,7 @@ body{
     width: 100%;
 }
 .items{
+    position: relative;
     background: rgb(215,242,233);
     background: linear-gradient(90deg, rgba(215,242,233,1) 6%, rgba(215,215,242,1) 47%, rgba(192,236,245,1) 100%);
     display: flex;
@@ -81,6 +82,10 @@ input[type="textbox"]:focus {
     border: none;
     align-self: center;
 }
+.likeBtn{
+    position: absolute;
+    left: 4%;
+}
 
 .cmnt{
     font-size: small;
@@ -96,6 +101,10 @@ input[type="textbox"]:focus {
     font-size: x-small;
     align-items: center;
     background-color: red;
+}
+
+#noImagesData{
+    margin: 100px auto;
 }
 
 @media (min-width:992px){

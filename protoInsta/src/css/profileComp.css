@@ -38,3 +38,9 @@
 .editPopUp div:hover{
     cursor: pointer;
 }
+@media (min-width:900px){
+    .editPopUp{
+        top: 30%;
+        left: 40%;
+    }
+}
