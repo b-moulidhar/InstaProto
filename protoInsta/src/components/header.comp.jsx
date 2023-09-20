@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import "../css/header.css"
 import Swal from 'sweetalert2'
 function HeaderComp(){
 

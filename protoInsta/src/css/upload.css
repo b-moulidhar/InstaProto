@@ -1,15 +1,12 @@
 #uploadForm{
+    font-size: larger;
+    font-family: 'Times New Roman', Times, serif;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
     width: 500px;
     align-self: center;
     align-items: center;
-
-    background: hsla(152, 52%, 40%, 1);
-    background: linear-gradient(90deg, hsla(152, 52%, 40%, 1) 0%, hsla(72, 52%, 74%, 1) 100%);
-    background: -moz-linear-gradient(90deg, hsla(152, 52%, 40%, 1) 0%, hsla(72, 52%, 74%, 1) 100%);
-    background: -webkit-linear-gradient(90deg, hsla(152, 52%, 40%, 1) 0%, hsla(72, 52%, 74%, 1) 100%);
     filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#309A68", endColorstr="#D1DF99", GradientType=1 );
 }
 

@@ -7,6 +7,9 @@ const [confPswd, setConfPswd] = useState(false);
 const [user,setUser] = useState({name :'', email:'', mobile:'', pswd:'' })
 const [finalUser, setFinalUser] = useState();
 const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.(com|in|edu|co)$/i;
+const phnumPattern = /^[6-9]\d{9}$/;
+let regButton = document.getElementsByClassName("btn-primary")[0];
 
 
 function changeHandler(evt){
@@ -18,16 +21,65 @@ function checkPswd(evt){
       if(passwordRegex.test(user.pswd)){
         console.log("good password")
         setFinalUser(user);
+        regButton.disabled = false;
       }else{
         let req = document.getElementsByClassName("pswdReq")[0];
         req.style.display = "block"
+        regButton.disabled = true;
         console.log("password does not meet the requirement");
       }
         console.log("password match");
     }else{
       alert("Password Doesn't match");
     }
+  }
    
+function emailVerify(evt){
+     let errorDisplay = document.getElementById("emailError");
+      if(emailPattern.test(evt.target.value)){
+        regButton.disabled = false;
+        errorDisplay.style.display = "none"
+      }else{
+        errorDisplay.style.display = "block"
+        regButton.disabled = true;
+      }
+   
+}
+function emailVerify(evt){
+    
+  let errorDisplay = document.getElementById("emailError");
+      if(emailPattern.test(evt.target.value)){
+        regButton.disabled = false;
+        errorDisplay.style.display = "none"
+      }else{
+        errorDisplay.style.display = "block"
+        regButton.disabled = true;
+      }
+   
+}
+function phnumVerify(evt){
+    
+  let errorDisplay = document.getElementById("phoneError");
+      if(phnumPattern.test(evt.target.value)){
+        regButton.disabled = false;
+        errorDisplay.style.display = "none"
+      }else{
+        errorDisplay.style.display = "block"
+        regButton.disabled = true;
+      }
+   
+}
+
+function pswdVerify(evt){
+  let req = document.getElementsByClassName("pswdReq")[0];
+  if(passwordRegex.test(evt.target.value)){
+    console.log("good password")
+    regButton.disabled = false;
+    req.style.display = "none"
+  }else{
+    req.style.display = "block"
+    regButton.disabled = true;
+  }
 }
 
 function register(){
@@ -40,7 +92,7 @@ function register(){
             console.log(res)
             if(res.status==201){
                 alert("Resgistered successfully");
-                window.location.href = "/forgot/otp"
+                window.location.href = "/"
                 // window.location.href = "/";
             }else if(res.status == 500){
                 alert("email already exits");
@@ -96,6 +148,7 @@ function register(){
                                 id="email"
                                 className="form-control"
                                 onInput={(evt)=>{changeHandler(evt)}}
+                                onBlur={(evt)=>{emailVerify(evt)}}
                               />
                               <label
                                 className="form-label"
@@ -103,6 +156,7 @@ function register(){
                               >
                                 Your Email
                               </label>
+                              <p id="emailError" style={{display:"none",color:"red"}}>*not a valid email</p>
                             </div>
                           </div>
                           <div className="d-flex flex-row align-items-center mb-4">
@@ -113,6 +167,7 @@ function register(){
                                 id="mobile"
                                 className="form-control"
                                 onInput={(evt)=>{changeHandler(evt)}}
+                                onChange={(evt)=>{phnumVerify(evt)}}
                               />
                               <label
                                 className="form-label"
@@ -120,6 +175,7 @@ function register(){
                               >
                                 Your phone number
                               </label>
+                              <p id="phoneError" style={{display:"none",color:"red"}}>*not a valid phone number</p>
                             </div>
                           </div>
                           <div className="d-flex flex-row align-items-center mb-4">
@@ -130,6 +186,7 @@ function register(){
                                 id="pswd"
                                 className="form-control"
                                 onInput={(evt)=>{changeHandler(evt)}}
+                                onBlur={(evt)=>{pswdVerify(evt)}}
                               />
                               <label
                                 className="form-label"

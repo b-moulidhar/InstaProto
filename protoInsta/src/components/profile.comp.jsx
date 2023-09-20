@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 let ProfileComp = ()=>{
     let [userData, setUserData] = useState([]);
     // let [nvals,setNvals] = useState({name:'',age:''});
+    
  
     let refresh = ()=>{
     Api.get('/profileDetails')
@@ -16,7 +17,6 @@ let ProfileComp = ()=>{
         if(res.status==401){
             alert("session expired");
         }
-        console.log(res.data);
         setUserData(res.data);
     }).catch(err=>{
         console.log(err)
@@ -32,11 +32,22 @@ let ProfileComp = ()=>{
     },[]);
 
     function changeImage(evt){
-        if(evt.target.value=="insertPic"){
+        if(evt.target.id=="insertPic"){
             document.getElementById("picUpload").click()
-        }else if(evt.target.value=="deletePic"){
-            alert("delete")
-            Api.delete("/profilepicDelete")
+        }else if(evt.target.id=="deletePic"){
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Your picture will be removed",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, remove!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    
+                    Api.delete("/profilepicDelete")
             .then((res)=>{
                 if(res.status==200){
                     Swal.fire(
@@ -47,12 +58,13 @@ let ProfileComp = ()=>{
                         refresh();
                     })
                 }
-                console.log(res);
             }).catch(err=>{
                 console.log(err)
                 if(err.response.status==401){
                     alert("session expired")
                     // window.location = "/";
+                }
+            })      
                 }
             })
         }
@@ -90,6 +102,22 @@ let ProfileComp = ()=>{
         return URL.createObjectURL(blob);
       };
 
+      function popUp(){
+        var x = document.getElementsByClassName("editPopUp")[0];
+        let y = document.getElementById("profileData");
+        if (x.style.display === "none") {
+            document.getElementById("profileData").addEventListener("click", function() {
+                this.style.filter = "none";
+                x.style.display = "none";
+              });
+            y.style.filter = "blur(5px)";
+            x.style.display = "flex";
+        } else {
+            y.style.filter = "none";
+            x.style.display = "none";
+          }
+      }
+
   
     return <>
     <HeaderComp/>
@@ -97,13 +125,20 @@ let ProfileComp = ()=>{
     {console.log()}
             {
                 userData.length>0 &&
+                
 
         <form id="profileData">
-            <select name="edit" id="" onChange={(evt)=>{changeImage(evt)}}>
+            
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16" onClick={popUp}>
+            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+            </svg>
+            {/* <select  name="edit" id="" onChange={(evt)=>{changeImage(evt)}}>
                 <option value="">edit pic</option>
                 <option value="insertPic">add image</option>
                 <option value="deletePic">remove image</option>
-            </select>
+            </select> */}
+           
             {
                 userData[0].profilepic!=null ?
             <img src={createBlobUrl(userData[0].profilepic, "image/jpeg")} alt="user Pic" />:
@@ -121,7 +156,10 @@ let ProfileComp = ()=>{
             </div>
         </form>
         }
-
+            <div className="editPopUp">
+                <div  id="insertPic" onClick={(evt)=>{changeImage(evt)}}>Insert Pic</div>
+                <div  id="deletePic" onClick={(evt)=>{changeImage(evt)}}>Delete Pic</div>
+            </div>
    
     </>
                

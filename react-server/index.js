@@ -105,7 +105,7 @@ const sendOtpMail = async function(emails,req,res){
 
   try {
     const result = await transporter.sendMail({
-      from: config.yahooEmail,
+      from: config.adminEmail,
       to: emails,
       subject: 'OTP',
       text: `OTP is ${otp}`
