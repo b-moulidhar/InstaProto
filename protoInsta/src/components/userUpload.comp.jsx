@@ -80,17 +80,13 @@ const UserUploads = () => {
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
       icon: 'warning',
+      background:"#edf2f4",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!'
   }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire(
-          'Deleted!',
-          'Your file has been deleted.',
-          'success'
-      )
           axios.delete("http://localhost:5000/deleteUsrUpload",{
             headers: {
               Authorization: `Bearer ${token}`,
@@ -100,7 +96,16 @@ const UserUploads = () => {
           })
           .then((res)=>{
             refresh();
-            console.log(res)
+            if(res.status==200){
+              Swal.fire({
+                position: 'top',
+                icon: 'success',
+                title: 'Your Post Has been Deleted successfully',
+                background:"#edf2f4",
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }
           })
           .catch((err)=>{
             console.log(err)

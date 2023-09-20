@@ -41,6 +41,7 @@ let ProfileComp = ()=>{
                 text: "Your picture will be removed",
                 icon: 'warning',
                 showCancelButton: true,
+                background:"#edf2f4",
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Yes, remove!'

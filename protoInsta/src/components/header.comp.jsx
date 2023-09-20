@@ -9,16 +9,20 @@ function HeaderComp(){
             text: "You will be logged out of this session!",
             icon: 'warning',
             showCancelButton: true,
+            background:"#edf2f4",
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'Yes, logout!'
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire(
-                    'logged Out!',
-                    'you have been successfully logged out',
-                    'success'
-                ).then(()=>{                 
+                Swal.fire({
+                    position:'top',
+                    icon: 'success',
+                    title: 'Logged out successfully',
+                    showConfirmButton: false,
+                    background:"#edf2f4",
+                    timer: 1000
+                  }).then(()=>{                 
                     localStorage.clear();
                     window.location = "/"
                 })      

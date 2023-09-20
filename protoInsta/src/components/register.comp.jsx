@@ -186,7 +186,7 @@ function register(){
                                 id="pswd"
                                 className="form-control"
                                 onInput={(evt)=>{changeHandler(evt)}}
-                                onBlur={(evt)=>{pswdVerify(evt)}}
+                                onChange={(evt)=>{pswdVerify(evt)}}
                               />
                               <label
                                 className="form-label"

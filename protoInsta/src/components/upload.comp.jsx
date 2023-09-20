@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import "../css/upload.css"
 import HeaderComp from "./header.comp";
+import Swal from "sweetalert2";
 
 const UploadComp = () => {
   const [file, setFile] = useState(null);
@@ -25,40 +26,52 @@ const UploadComp = () => {
   function sendImage(e) {
     e.preventDefault();
     console.log("sending");
-
-    // Create a new FormData instance and append the selected file
-    const formData = new FormData();
-    formData.append("file", file);
-
-    let token = localStorage.getItem("Authorization");
-    let userId = localStorage.getItem("UserId"); 
-
-
-    axios
-      .post("http://localhost:5000/upload", formData,{
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "UserID": userId,
-        } 
+    if(file==null){
+      Swal.fire({
+        icon: 'warning',
+        title: 'Oops...',
+        text: 'No image selected',
+        background:"#edf2f4",
       })
-      .then((response) => {
-        console.log(response);
-        if(response.status===200){
-          setPreviewUrl(null);
-          setFile(null)
-          document.getElementById("file").value = "";
-          alert("data added successfully")
-        }
-        if(response.status==401){
+    }else{
+
+      const formData = new FormData();
+      formData.append("file", file);
+  
+      let token = localStorage.getItem("Authorization");
+      let userId = localStorage.getItem("UserId"); 
+  
+  
+      axios
+        .post("http://localhost:5000/upload", formData,{
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "UserID": userId,
+          } 
+        })
+        .then((response) => {
+          console.log(response);
+          if(response.status===200){
+            setPreviewUrl(null);
+            setFile(null)
+            document.getElementById("file").value = "";
+            Swal.fire({
+              position: 'top',
+              icon: 'success',
+              title: 'your post uploaded successfully',
+              background:"#edf2f4",
+              showConfirmButton: false,
+              timer: 1000
+            })
+          }
+        })
+        .catch((err) => {
           alert("please login again")
-          
-        }
-      })
-      .catch((err) => {
-        alert("please login again")
-        console.log("Error ",err);
-        window.location.href = "/"
-      });
+          console.log("Error ",err);
+          window.location.href = "/"
+        });
+    }
+    // Create a new FormData instance and append the selected file
   }
 
   return (

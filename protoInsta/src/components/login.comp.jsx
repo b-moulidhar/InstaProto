@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, setToken} from "../redux/actions/actions";
+import Swal from "sweetalert2";
 
 
 // function Login({ history }){
@@ -30,7 +31,6 @@ const [credentials, setCredentials] = useState({email:'', pswd:''});
         localStorage.clear();
         axios.post("http://localhost:5000/login",credentials)
         .then((res)=>{
-            alert(res.data.message)
 
             dispatch(setToken(res.data.token))
             dispatch(setUser(res.data.user))
@@ -40,13 +40,25 @@ const [credentials, setCredentials] = useState({email:'', pswd:''});
             
             
             if(res.status==200){
-                window.location.href ="/homePage"
+                Swal.fire({
+                    position: 'top',
+                    icon: 'success',
+                    title: res.data.message,
+                    showConfirmButton: false,
+                    timer: 1000
+                  }).then(()=>{
+                      window.location.href ="/homePage"
+                  })
             // history.push("/uploadImage");
             }
         })
         .catch((err)=>{
             console.log(err);
-            alert("please enter correct credentials");
+            Swal.fire({
+                position: 'top',
+                icon: 'error',
+                text: 'Please Enter Correct Credentials!',
+              })
         })
         console.log(token,user_id)
     }

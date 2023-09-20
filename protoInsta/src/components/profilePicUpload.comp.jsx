@@ -42,11 +42,14 @@ const ProfilePicUpload = () => {
           setPreviewUrl(null);
           setFile(null)
           document.getElementById("file").value = "";
-          Swal.fire(
-            'profile pic updated',
-            'your profile pic has been updated',
-            'success'
-        ).then(()=>{
+          Swal.fire({
+            position: 'top',
+            icon: 'success',
+            title: 'Your profile pic updated',
+            background:"#edf2f4",
+            showConfirmButton: false,
+            timer: 1000
+          }).then(()=>{
             window.location = "/homePage/profile"
         })
         }
