@@ -1,37 +1,78 @@
 import { useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
+import "../css/newpass.css";
 
 function NewPass(){
     const [pass, setPass] = useState({nPass:"",cPass:""})
     const isValid = localStorage.getItem("validotp")
-    const phno = localStorage.getItem("phno")
+	const email = localStorage.getItem("email")
+	const phno = localStorage.getItem("phno")
+	const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+
+	let contactDet;
+	if(email){
+		contactDet = email;
+	}else if(phno){
+		contactDet = phno;
+	}
     const inputHandler = function (evt) {
-        // const { name, value } = evt.target;
+		let x = document.getElementById("pswdError")
+		let y = document.getElementsByClassName("pswdChangeBtn")[0]
+		console.log(x)
+       if(passwordRegex.test(evt.target.value)){
+		   	x.style.display = "none"
+		   	y.disabled = false;
+		}else{
+			y.disabled = true;
+			x.style.display = "block"
+	   }
         setPass({ ...pass, [evt.target.name]: evt.target.value });
       };
     
       function updatePass() {
 
-        
-        console.log(pass);
         if(pass.nPass===pass.cPass && isValid){
-
-            axios
-              .post("http://localhost:5000/updatepass", {npass: pass.nPass, phno:phno}) // Pass the phone number as an object in the request body
-              .then((res) => {
-                if(res.status ==200){
-                    localStorage.clear()
-                    console.log(res.data);
-					window.location.href = "/"
-                }else if(res.status ==500){
-					console.log("phone number not found")
-				}
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-        }else{
-
+			if(contactDet){
+				axios.post("http://localhost:5000/updatepass", {npass: pass.nPass, contact:contactDet}) // Pass the phone number as an object in the request body
+				.then((res) => {
+				  if(res.status ==200){
+					Swal.fire({
+						position: 'top',
+						icon: 'success',
+						text: "Password changed successfully",
+						background:"#edf2f4",
+						showConfirmButton: false,
+						timer: 1500
+					  }).then(()=>{
+						  localStorage.clear();
+						  window.location.href = "/"
+					  })
+				  }else if(res.status ==500){
+					  console.log("phone number or email not found")
+				  }
+				})
+				.catch((err) => {
+				  console.log(err);
+				});
+			}
+           
+        }
+		else{
+			if(isValid){
+				Swal.fire({
+					position: 'top',
+					icon: 'error',
+					text: 'passwords does not match',
+					background:"#edf2f4",
+				})
+			}
+			Swal.fire({
+				position: 'top',
+				icon: 'error',
+				text: 'otp not validated',
+				background:"#edf2f4",
+			  })
         }
       }
     
@@ -60,12 +101,16 @@ function NewPass(){
 											<input class="form-control form-control-lg" type="text" name="cPass" placeholder="Confirm your new password" onChange={(evt)=>inputHandler(evt)}/>
 										</div>
 										<div class="text-center mt-3">
-											<button class="btn btn-lg btn-primary" onClick={updatePass}>Reset password</button>&nbsp; &nbsp;
+											<button class="btn btn-lg btn-primary pswdChangeBtn" onClick={updatePass}>Reset password</button>&nbsp; &nbsp;
 											<a href="/" class="btn btn-lg btn-primary">Back to Login</a>
 										</div>
 									
 								</div>
+							<p id="pswdError" style={{display:"none"}}>* must have atleast 8 characters <br />
+                               must have atleast 1 numberic character <br />
+                               must have atleast 1 special characters</p>
 							</div>
+
 						</div>
 
 					</div>

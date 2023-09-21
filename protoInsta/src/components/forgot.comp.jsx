@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { clearStore, setMobile } from "../redux/actions/actions";
+import Swal from "sweetalert2";
 
 function ForgetPass(){
     localStorage.clear();
@@ -48,6 +49,14 @@ function ForgetPass(){
             .then((res) => {
                 console.log(res.status);
               if(res.status==200){
+                Swal.fire({
+                  position: 'top',
+                  icon: 'success',
+                  text: res.data,
+                  background:"#edf2f4",
+                  showConfirmButton: false,
+                  timer: 1000
+                })
                   window.location.href = "/forgot/otp"
               }
               console.log(res.data);
@@ -71,18 +80,31 @@ function ForgetPass(){
         axios
         .post("http://localhost:5000/sendEmail",{email:email}) // Pass the phone number as an object in the request body
         .then((res) => {
-            alert(res.data);
           if(res.status==250){
-            console.log(res.data)
+            Swal.fire({
+              position: 'top',
+              icon: 'success',
+              text: res.data,
+              background:"#edf2f4",
+              showConfirmButton: false,
+              timer: 1500
+            }).then(()=>{
               window.location.href = "/forgot/otp"
+            })
           }
         })
       }
 
       const clickHandler = function(e){
         if(option){
-          console.log(typeof option)
-          console.log(option == "phone");
+          Swal.fire({
+            position: 'top',
+            icon: 'info',
+            text: 'sending otp please wait for 10s',
+            background:"#edf2f4",
+            showConfirmButton: false,
+            timer: 3000
+          })
           if(option == "Phone"){
             sendPhone(e);
           }else{

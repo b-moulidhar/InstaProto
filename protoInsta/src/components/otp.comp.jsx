@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 function OtpComp(){
     const [Otp, setOtp] = useState();
@@ -16,8 +17,17 @@ function OtpComp(){
         .then((res)=>{
             if(res.status===200){
                 console.log(res.data)
+				Swal.fire({
+					position: 'top',
+					icon: 'success',
+					text: 'otp verified successfully',
+					background:"#edf2f4",
+					showConfirmButton: false,
+					timer: 1000
+				  }).then(()=>{
+					  window.location = "/newpassword"
+				  })
                 localStorage.setItem("validotp",true);
-                window.location = "/newpassword"
             }else{
 				console.log(res.data)
 			}

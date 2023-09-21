@@ -429,22 +429,33 @@ app.post('/verifyOTP', (req, res) => {
 });
 //-------------------------------------------------------------------------------------------------------------------
 app.post("/updatepass",(req,res)=>{
-const {npass,phno} = req.body;
-
+const {npass,contact} = req.body;
+console.log("update pass")
+console.log(req.body)
+const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.(com|in|edu|co)$/i;
+const phnumPattern = /^[6-9]\d{9}$/;
 bcrypt.hash(npass, 2, (err, u_pswd) => {
   if (err) {
     console.error('Error hashing password:', err);
     return;
   }
-  const query = "UPDATE users SET u_pswd = ? WHERE mobile = ?" 
-  pool.query(query,[u_pswd,phno],(err,result)=>{
-    console.log(result,"hello"+phno);
-    if(result.changedRows==0){
-      console.error('Error updating file:', err);
-          return res.status(500).json({ error: 'Error updating file' });
-    }
-    res.json({message:"password updated successfully"})
-  })
+  let query;
+  if(emailPattern.test(contact)){
+     query = "UPDATE users SET u_pswd = ? WHERE email = ?" 
+  }else if(phnumPattern.test(contact)){
+    query = "UPDATE users SET u_pswd = ? WHERE mobile = ?" 
+  }
+  if(query){
+    pool.query(query,[u_pswd,contact],(err,result)=>{
+      console.log(result,"hello"+contact);
+      if(result.changedRows==0){
+        console.error('Error updating file:', err);
+            return res.status(500).json({ error: 'Error updating file' });
+      }
+      res.json({message:"password updated successfully"})
+    })
+  }
+  
 })
 
 

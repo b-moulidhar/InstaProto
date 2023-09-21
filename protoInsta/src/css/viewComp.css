@@ -90,7 +90,7 @@ input[type="textbox"]:focus {
 #numLikes{
     position: absolute;
     left: 8%;
-    bottom: 2%;
+    bottom: 1%;
 }
 
 .cmnt{
