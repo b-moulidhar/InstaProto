@@ -249,6 +249,11 @@ const ViewComp = () => {
       ) : (
         heroes.map((hero, index) => {
             const likedHero = likes.find((data) => data.image_id === hero.id && Number(userId) === data.u_id)
+            const numLikes = likes.filter((data) =>{
+              if(data.image_id === hero.id){
+                  return data;
+            }              
+            })
           return  (
           <div key={index} className="items">
             {
@@ -269,6 +274,7 @@ const ViewComp = () => {
                 </div>
               )
             }
+            <h4 id="numLikes">{numLikes.length}</h4>
 
             {/* Render the individual properties of the hero object */}
             <img src={createBlobUrl(hero.filedata, hero.filetype)} alt={`Hero ${index}`} />
