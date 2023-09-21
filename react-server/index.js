@@ -423,7 +423,6 @@ app.post('/verifyOTP', (req, res) => {
 
   // const phoneNumber = req.body.phoneNumber; // The phone number to which OTP was sent
   const enteredOTP = req.body.Otp; // The OTP entered by the user
-  console.log(enteredOTP);
   // const enteredEmail = req.body.email; 
   verifyOtpMail(data,enteredOTP,res);
 
@@ -455,8 +454,6 @@ bcrypt.hash(npass, 2, (err, u_pswd) => {
 
 app.post("/sendEmail", async (req, res)=> {
     const emails = req.body.email;
-    console.log("clicked", emails);
-
     pool.query("SELECT email FROM users WHERE email = ?", [emails], async (err, results) => {
       if (err) {
         console.error("Error executing query:", err);
@@ -464,7 +461,6 @@ app.post("/sendEmail", async (req, res)=> {
       }
 
       const users = results;
-      console.log(results[0])
       if(users[0] == undefined){
         console.log("user does not exist ");
         res.json("user does not exist")
@@ -496,7 +492,6 @@ app.get('/profileDetails',verifyToken,(req,res)=>{
      var blobData;
     if(result[0].profilepic==null){
       blobData=null;
-      console.log("inside if",blobData)
     }else{
       blobData = result[0].profilepic.toString('binary');
     }
@@ -504,7 +499,6 @@ app.get('/profileDetails',verifyToken,(req,res)=>{
       fileDataArray.push({ id:result[0].id, u_name:result[0].u_name , email:result[0].email, mobile:result[0].mobile, profilepic:blobData })
     }
     if(fileDataArray.length>0){
-      console.log(fileDataArray)
       return res.json(fileDataArray);
     }
   })
@@ -528,7 +522,6 @@ app.post('/profilePicUpload', [upload.single('file'), verifyToken], (req, res) =
   // Insert the file data into the database
   const query = "UPDATE users SET profilepic = ? WHERE id = ?"
   const result = (file.filename).replace(/-.*/, '');
-  console.log(fileData);
   pool.query(query, [fileData,uid], (err, result) => {
     if (err) {
       console.error('Error uploading file:', err);
@@ -548,7 +541,6 @@ app.delete("/profilepicDelete",verifyToken, (req,res)=>{
       console.error('Error deleting element:', err);
       res.status(500).json({ error: 'Error deleting element' });
     } else {
-      console.log('Deleted successfully',results);
       res.status(200).json({ message: 'Deleted successfully' });
     }
   })
@@ -591,15 +583,14 @@ app.post("/postLikes", verifyToken, (req, res) => {
       });
     } else {
       // The combination already exists, return a message
-      console.log("Already liked");
       return res.status(201).json({ error: 'Already liked' });
     }
   });
 });
 //-------------------------------------------------------------------------------------------------------------------
-app.delete("/unPostLikes",verifyToken,(req,res)=>{
+app.delete("/unPostLikes/:imgId",verifyToken,(req,res)=>{
   const uid = req.headers.userid
-  const imagId = req.headers.imageid
+  const imagId = req.params.imgId
   const queries = "DELETE FROM likes WHERE u_id = ? AND image_id = ?;"
   pool.query(queries,[uid,imagId],(err,result)=>{
     if(err){

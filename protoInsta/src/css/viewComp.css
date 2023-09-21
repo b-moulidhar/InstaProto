@@ -85,6 +85,7 @@ input[type="textbox"]:focus {
 .likeBtn{
     position: absolute;
     left: 4%;
+    bottom: 3%;
 }
 
 .cmnt{

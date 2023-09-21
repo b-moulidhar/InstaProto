@@ -122,7 +122,7 @@ const UserUploads = () => {
     <HeaderComp/>
 
       {loading ? (
-        <p>Loading...</p>
+        <p id="noImageData">Loading...</p>
       ) : <div className="allUserUploads">
         {
         heroes.length==0 ? <h2 id="noImage">No Images uploaded by you</h2>:
