@@ -7,7 +7,7 @@ import Api from "../api/api";
 import Swal from "sweetalert2";
 
 const ViewComp = () => {
-  const [heroes, setHeroes] = useState([]);
+  const [ heroes, setHeroes] = useState([]);
   const [userData,setUserData]= useState([])
   const [allComments, setAllComments] = useState([]);
   const [likes,setLikes] = useState();
@@ -16,6 +16,8 @@ const ViewComp = () => {
   const [hideCmt, setHideCmt] = useState();
   const [showCmt, setShowCmt] = useState();
   const ctoken = useSelector(state=> state.authentication.token);
+
+ 
    
 
   let token = localStorage.getItem("Authorization");
@@ -76,8 +78,62 @@ const ViewComp = () => {
   
 
   useEffect(() => {
+
     refresh();
+    
   }, []);
+  useEffect(() => {
+    if(document.getElementsByClassName("allImages").length>0){
+
+    const container = document.getElementsByClassName("container")[0];
+    const image = Array.from(document.getElementsByClassName("allImages"));
+console.log(image[0]);
+    let scale = 1;
+    let offsetX = 0;
+    let offsetY = 0;
+    let isDragging = false;
+
+
+
+image.forEach((imgs)=>{
+  imgs.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    scale += e.deltaY * -0.0005; // Adjust the delta multiplier for slower zoom
+    scale = Math.min(Math.max(1, scale), 1.5); // Adjust min and max zoom levels
+    updateImage(imgs);
+    container.addEventListener("mousedown", (e) => {
+          isDragging = true;
+          offsetX = e.clientX - container.getBoundingClientRect().left;
+          offsetY = e.clientY - container.getBoundingClientRect().top;
+          console.log("drg",offsetX,offsetY);
+      });
+    
+      window.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        const x = e.clientX - container.getBoundingClientRect().left;
+        const y = e.clientY - container.getBoundingClientRect().top;
+        const deltaX = x - offsetX;
+        const deltaY = y - offsetY;
+        offsetX = x;
+        offsetY = y;
+        container.scrollLeft -= deltaX;
+        container.scrollTop -= deltaY;
+        console.log("drg",container.scrollLeft,y);
+      });
+      window.addEventListener("mouseup", () => {
+          isDragging = false;
+      });
+      
+    });
+  })
+  function updateImage(imgs) {
+      imgs.style.transform = `scale(${scale})`;
+  }  
+
+
+  }  
+}, [allComments]);
+   
 
   const postLike = (imageId)=>{
     const imageid = imageId;
@@ -150,7 +206,7 @@ const ViewComp = () => {
   function postComment(hid){
     let element = document.getElementById(hid);
     element.value = ""
-      console.log(element)
+      console.log(element);
     axios.post("http://localhost:5000/comments", comments,{
       headers: {
         Authorization: `Bearer ${token}`,
@@ -160,14 +216,14 @@ const ViewComp = () => {
     .then((res)=>{
       
       if(res.status==200){
-        alert("posted successfully")
+        alert("posted successfully");
       }
-      console.log(res.data)
-      refresh()
+      console.log(res.data);
+      refresh();
     })
     .catch((err)=>{
       console.log(err)
-      alert("Error", err)
+      alert("Error", err);
     })
   }
   function deleteComment(cmtId){
@@ -277,7 +333,7 @@ const ViewComp = () => {
             <h4 id="numLikes">{numLikes.length}</h4>
 
             {/* Render the individual properties of the hero object */}
-            <img src={createBlobUrl(hero.filedata, hero.filetype)} alt={`Hero ${index}`} />
+            <img src={createBlobUrl(hero.filedata, hero.filetype)} alt={`Hero ${index}`} className="allImages" />
             <p>{hero.filename}</p>
             {/* Render the image using createBlobUrl */}
             {hero.filetype === "application/pdf" && (
