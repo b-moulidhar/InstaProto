@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { clearStore, setMobile } from "../redux/actions/actions";
+import { clearStore, setMobile } from "../../redux/actions/actions";
 import Swal from "sweetalert2";
 
 function ForgetPass(){

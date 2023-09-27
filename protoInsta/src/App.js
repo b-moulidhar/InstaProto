@@ -1,16 +1,16 @@
 import './App.css';
 import { BrowserRouter, NavLink, Route,Routes} from "react-router-dom"
 import TableComp from './components/table.comp';
-import ViewComp from './components/viewImages.comp';
-import Login from './components/login.comp';
-import Register from './components/register.comp';
-import UserUploads from './components/userUpload.comp';
-import UploadComp from './components/upload.comp';
-import ForgetPass from './components/forgot.comp';
-import OtpComp from './components/otp.comp';
-import NewPass from './components/newPass.comp';
-import ProfileComp from './components/profile.comp';
-import ProfilePicUpload from './components/profilePicUpload.comp';
+import ViewComp from './components/Homepage/viewImages.comp';
+import Login from './components/login/login.comp';
+import Register from './components/register/register.comp';
+import UserUploads from './components/uploads/userUpload.comp';
+import UploadComp from './components/uploads/upload.comp';
+import ForgetPass from './components/forgot/forgot.comp';
+import OtpComp from './components/forgot/otp.comp';
+import NewPass from './components/forgot/newPass.comp';
+import ProfileComp from './components/profile/profile.comp';
+import ProfilePicUpload from './components/profile/profilePicUpload.comp';
 
 function App() {
   return<>

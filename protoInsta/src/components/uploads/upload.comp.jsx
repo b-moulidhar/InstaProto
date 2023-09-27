@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
-import "../css/upload.css"
-import HeaderComp from "./header.comp";
+import "../../css/upload.css"
+import HeaderComp from "../header/header.comp";
 import Swal from "sweetalert2";
 
 const UploadComp = () => {

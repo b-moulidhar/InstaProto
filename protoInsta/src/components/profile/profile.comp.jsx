@@ -1,9 +1,9 @@
 import { useEffect } from "react"
 import { useState } from "react";
-import "../css/profileComp.css"
-import HeaderComp from "./header.comp";
+import "./profileComp.css"
+import HeaderComp from "../header/header.comp";
 import { NavLink } from "react-router-dom";
-import Api from "../api/api";
+import Api from "../../api/api";
 import Swal from "sweetalert2";
  
 let ProfileComp = ()=>{

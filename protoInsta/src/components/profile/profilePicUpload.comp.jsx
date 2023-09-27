@@ -1,7 +1,7 @@
 import { useState } from "react";
-import "../css/upload.css"
-import HeaderComp from "./header.comp";
-import Api from "../api/api";
+import "../../css/upload.css"
+import HeaderComp from "../header/header.comp";
+import Api from "../../api/api";
 import Swal from "sweetalert2";
 
 const ProfilePicUpload = () => {

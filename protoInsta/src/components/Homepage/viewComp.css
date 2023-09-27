@@ -148,6 +148,10 @@ input[type="textbox"]:focus {
         height: 250px;
         margin-top: 10%;
     }
+    #numLikes{
+        left: 12%;
+        bottom: 1%;
+    }
 }
 @media (max-width:501px) and (min-width:280px){
     .items{
@@ -157,5 +161,9 @@ input[type="textbox"]:focus {
         width: 90%;
         height: 200px;
         margin-top: 10%;
+    }
+    #numLikes{
+        left: 13%;
+        bottom: 1%;
     }
 }

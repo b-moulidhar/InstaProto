@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import "../css/register.css"
+import "./register.css"
 
 function Register(){
 const [confPswd, setConfPswd] = useState(false);

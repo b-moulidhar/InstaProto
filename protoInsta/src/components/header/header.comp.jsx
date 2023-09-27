@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import "../css/header.css"
+import "./header.css"
 import Swal from 'sweetalert2'
 function HeaderComp(){
 
@@ -33,6 +33,47 @@ function HeaderComp(){
     return(
         <>
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
+    <div className="container-fluid">
+        <NavLink end to="/homePage">
+            <button className="btn primary">Home</button>
+        </NavLink>
+        <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                <li className="nav-item">
+                    <NavLink end to="/homePage/uploads">
+                        <button className="btn primary">viewImages</button>
+                    </NavLink>
+                </li>
+                <li className="nav-item">
+                    <NavLink end to="/homePage/userImages">
+                        <button className="btn primary">upload a image</button>
+                    </NavLink>
+                </li>
+                <li className="nav-item">
+                    <NavLink end to="/homePage/profile">
+                        <button className="btn primary">profile</button>
+                    </NavLink>
+                </li>
+            </ul>
+            <button className="btn btn-outline-success" onClick={logout}>
+                logout
+            </button>
+        </div>
+    </div>
+</nav>
+
+        {/* <nav className="navbar navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
             <NavLink end  to="/homePage"><button className="btn primary">Home</button></NavLink>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +95,7 @@ function HeaderComp(){
                     <button className="btn btn-outline-success" onClick={logout}>logout</button>
                 </div>
             </div>
-        </nav>
+        </nav> */}
 
         </>
     )

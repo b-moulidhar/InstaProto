@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import "../css/newpass.css";
+import "./newpass.css";
 
 function NewPass(){
     const [pass, setPass] = useState({nPass:"",cPass:""})
