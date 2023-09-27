@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 
 const ImagesComp = (heros) => {
     const {hero,index} = heros;

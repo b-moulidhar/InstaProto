@@ -1,7 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
 import Swal from "sweetalert2";
 import "./newpass.css";
+import Api from "../../api/api";
 
 function NewPass(){
     const [pass, setPass] = useState({nPass:"",cPass:""})
@@ -34,7 +34,7 @@ function NewPass(){
 
         if(pass.nPass===pass.cPass && isValid){
 			if(contactDet){
-				axios.post("http://localhost:5000/updatepass", {npass: pass.nPass, contact:contactDet}) // Pass the phone number as an object in the request body
+				Api.post("/updatepass", {npass: pass.nPass, contact:contactDet}) // Pass the phone number as an object in the request body
 				.then((res) => {
 				  if(res.status ==200){
 					Swal.fire({
@@ -66,13 +66,14 @@ function NewPass(){
 					text: 'passwords does not match',
 					background:"#edf2f4",
 				})
+			}else if(!isValid){
+				Swal.fire({
+					position: 'top',
+					icon: 'error',
+					text: 'otp not validated',
+					background:"#edf2f4",
+				  })
 			}
-			Swal.fire({
-				position: 'top',
-				icon: 'error',
-				text: 'otp not validated',
-				background:"#edf2f4",
-			  })
         }
       }
     

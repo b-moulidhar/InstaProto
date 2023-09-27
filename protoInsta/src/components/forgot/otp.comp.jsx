@@ -1,6 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
 import Swal from "sweetalert2";
+import Api from "../../api/api";
 
 function OtpComp(){
     const [Otp, setOtp] = useState();
@@ -13,7 +13,7 @@ function OtpComp(){
     
    }
     function checkOtp(){
-        axios.post("http://localhost:5000/verifyOTP",{Otp,phno,email})
+        Api.post("/verifyOTP",{Otp,phno,email})
         .then((res)=>{
             if(res.status===200){
                 console.log(res.data)

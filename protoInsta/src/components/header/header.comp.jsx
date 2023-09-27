@@ -1,7 +1,16 @@
 import { NavLink } from "react-router-dom";
 import "./header.css"
 import Swal from 'sweetalert2'
+import { useEffect, useState } from "react";
 function HeaderComp(){
+
+
+    const [link,setLink] = useState("")
+    useEffect(()=>{
+        let userId = localStorage.getItem("UserId"); 
+        const profilePage = "/profileDetails/"+userId;
+        setLink(profilePage);
+    },[])
 
     function logout(){
         Swal.fire({
@@ -61,7 +70,7 @@ function HeaderComp(){
                     </NavLink>
                 </li>
                 <li className="nav-item">
-                    <NavLink end to="/homePage/profile">
+                    <NavLink end to={link}>
                         <button className="btn primary">profile</button>
                     </NavLink>
                 </li>

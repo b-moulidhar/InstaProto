@@ -14,12 +14,8 @@ const CommentComp = (heros) => {
     let userId = localStorage.getItem("UserId"); 
 
     function refresh(){
-        axios.get("http://localhost:5000/comments",{
-        headers: {
-            Authorization: `Bearer ${token}`,
-            "UserID": userId,
-        } 
-        }).then((res) => {
+        Api.get("/comments")
+        .then((res) => {
         setAllComments(res.data);
         })
         .catch((err)=>{
@@ -68,12 +64,7 @@ const CommentComp = (heros) => {
             let element = document.getElementById(hid);
             element.value = ""
               console.log(element);
-            axios.post("http://localhost:5000/comments", comments,{
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "UserID": userId,
-              } 
-            })
+            Api.post("/comments", comments)
             .then((res)=>{
               
               if(res.status==200){

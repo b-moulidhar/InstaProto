@@ -490,8 +490,8 @@ app.post("/sendEmail", async (req, res)=> {
 
 //-------------------------------------------------------------------------------------------------------------------
 
-app.get('/profileDetails',verifyToken,(req,res)=>{
-  const uid = req.headers.userid;
+app.get('/profileDetails/:id',verifyToken,(req,res)=>{
+  const uid = req.params.id;
   const query = "SELECT id,u_name,email,mobile,profilepic from users where id = ?"
   pool.query(query,[uid],(err,result)=>{
     if (err) {
@@ -611,6 +611,7 @@ app.delete("/unPostLikes/:imgId",verifyToken,(req,res)=>{
     return res.json(result);
   })
 })
+
 
 //-------------------------------------------------------------------------------------------------------------------
 // Start the server

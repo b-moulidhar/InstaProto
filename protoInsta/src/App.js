@@ -9,8 +9,8 @@ import UploadComp from './components/uploads/upload.comp';
 import ForgetPass from './components/forgot/forgot.comp';
 import OtpComp from './components/forgot/otp.comp';
 import NewPass from './components/forgot/newPass.comp';
-import ProfileComp from './components/profile/profile.comp';
 import ProfilePicUpload from './components/profile/profilePicUpload.comp';
+import ProfileComp from './components/profile/profile.comp';
 
 function App() {
   return<>
@@ -33,8 +33,9 @@ function App() {
                 <Route path="HomePage" element={<ViewComp/>}/>
                 <Route path="homePage/uploads" element={<UserUploads/>}/>
                 <Route path="homePage/userImages" element={<UploadComp/>}/>
-                <Route path="homePage/profile" element={<ProfileComp/>}/>
+                {/* <Route path="homePage/profile" element={<ProfileComp/>}/> */}
                 <Route path="homePage/profile/picUpload" element={<ProfilePicUpload/>}/>
+                <Route path="profileDetails/:id" element={<ProfileComp/>}/>
                 {/* <Route path="viewImages" element={<ViewComp/>}/> */}
                 <Route path="testing" element={<TableComp/>}/>
             </Routes>

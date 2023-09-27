@@ -7,6 +7,7 @@ import Api from "../../api/api";
 import Swal from "sweetalert2";
 import CommentComp from "./commentcomp";
 import ImagesComp from "./imagesComp";
+import UplodedByComp from "./uplby.comp";
 
 const ViewComp = () => {
   const [ images, setImages] = useState([]);
@@ -101,6 +102,7 @@ const ViewComp = () => {
             })
           return  (
           <div key={index} className="items">
+            <UplodedByComp hero={hero}/>
             {
               // Check if the user has liked the image
               // Render the like button based on whether the user has liked the hero
