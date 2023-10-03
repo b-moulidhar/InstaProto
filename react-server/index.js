@@ -216,7 +216,7 @@ app.post('/register',(req,res)=>{
       return;
     }   
 
-    let id = Math.ceil(Math.random()*10000);
+    let id = Math.ceil(Math.random()*100000);
     const query = "insert into users (id, u_name, email, mobile, u_pswd,profilepic) VALUES (?, ?, ?, ?, ?,?)"
       pool.query(query, [id,name, email, mobile, u_pswd,null], (err, result) => {
         if (err) {

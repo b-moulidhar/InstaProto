@@ -1,0 +1,13 @@
+.profileLinks a{
+    cursor: pointer;
+    color: black;
+    text-decoration:none;
+}
+.profileLinks{
+    padding: 0px 10px 0px 10px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px 0 rgba(0,0,0,0.2), 0 4px 16px 0 rgba(0,0,0,0.19);
+    margin-top: 10px;
+    align-self: center;
+    background-color: azure;
+}

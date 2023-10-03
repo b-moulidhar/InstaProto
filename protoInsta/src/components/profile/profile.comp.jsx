@@ -24,8 +24,13 @@ let ProfileComp = ()=>{
     }).catch(err=>{
         console.log(err)
         if(err.response.status==401){
-            alert("session expired")
-            // window.location = "/";
+            Swal.fire({
+                position: 'top',
+                icon: 'error',
+                text: 'session timed Out',
+              }).then(()=>{
+                window.location = "/";
+              })
         }
     })
     }
