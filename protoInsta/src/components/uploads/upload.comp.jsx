@@ -66,9 +66,16 @@ const UploadComp = () => {
           }
         })
         .catch((err) => {
-          alert("please login again")
-          console.log("Error ",err);
-          window.location.href = "/"
+          console.log(err)
+        if(err.response.status==401){
+            Swal.fire({
+                position: 'top',
+                icon: 'error',
+                text: 'session timed Out',
+              }).then(()=>{
+                window.location = "/";
+              })
+        }
         });
     }
     // Create a new FormData instance and append the selected file

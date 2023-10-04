@@ -8,7 +8,6 @@ const ImagesComp = (heros) => {
   
       const container = document.getElementsByClassName("container")[0];
       const image = Array.from(document.getElementsByClassName("allImages"));
-  console.log(image[0]);
       let scale = 1;
       let offsetX = 0;
       let offsetY = 0;
@@ -93,7 +92,7 @@ const ImagesComp = (heros) => {
 
   return <>
   
-  <img src={createBlobUrl(hero.filedata, hero.filetype)} alt={`Hero ${index}`} className="allImages" />
+  <img src={createBlobUrl(hero.filedata, hero.filetype)} alt={`Hero ${index}`} className="allImages" draggable="true" />
   <p>{hero.filename}</p>
   {/* Render the image using createBlobUrl */}
   {hero.filetype === "application/pdf" && (

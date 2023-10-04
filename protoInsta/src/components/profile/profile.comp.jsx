@@ -18,7 +18,14 @@ let ProfileComp = ()=>{
     Api.get('/profileDetails/'+id)
     .then((res)=>{
         if(res.status==401){
-            alert("session expired");
+            Swal.fire({
+                position: 'top',
+                icon: 'error',
+                text: 'session timed Out',
+                timer: 2000
+              }).then(()=>{
+                window.location = "/";
+              })
         }
         setUserData(res.data);
     }).catch(err=>{
@@ -29,7 +36,7 @@ let ProfileComp = ()=>{
                 icon: 'error',
                 text: 'session timed Out',
               }).then(()=>{
-                window.location = "/";
+                // window.location = "/";
               })
         }
     })
@@ -59,7 +66,7 @@ let ProfileComp = ()=>{
             }).then((result) => {
                 if (result.isConfirmed) {
                     
-                    Api.delete("/profilepicDelete")
+            Api.delete("/profilepicDelete")
             .then((res)=>{
                 if(res.status==200){
                     Swal.fire(
@@ -84,14 +91,12 @@ let ProfileComp = ()=>{
     }
 
     const createBlobUrl = (base64String, fileType) => {
-        console.log(base64String)
         const byteCharacters = atob(base64String);
         const byteNumbers = new Array(byteCharacters.length);
         for (let i = 0; i < byteCharacters.length; i++) {
           byteNumbers[i] = byteCharacters.charCodeAt(i);
         }
         const byteArray = new Uint8Array(byteNumbers);
-        console.log(byteArray)
     
         // Set the correct MIME type based on the fileType parameter
         let mimeType;
@@ -130,7 +135,15 @@ let ProfileComp = ()=>{
           }
       }
 
-  
+      function userFollow(){
+        Api.post("/profile/follow/"+id, {userId:userId})
+        .then((res)=>{
+            console.log(res.data)
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+      }
     return <>
     <div className="container">
 
@@ -170,6 +183,11 @@ let ProfileComp = ()=>{
             <div className="mb-3">
                 <label htmlFor="name" className="form-label">User Mobile : {userData[0].mobile}</label>
             </div>
+            {!originalUser &&
+            <div className="mb-3">
+                <button className="btn btn-primary" disabled onClick={userFollow}>follow</button>
+            </div>
+            }
         </form>
         }
             <div className="editPopUp">

@@ -611,7 +611,25 @@ app.delete("/unPostLikes/:imgId",verifyToken,(req,res)=>{
     return res.json(result);
   })
 })
-
+//-------------------------------------------------------------------------------------------------------------------
+app.post("/profile/follow/:id",verifyToken,(req,res)=>{
+    let profileId = req.params.id;
+    let userId = req.body.userId;
+    let id = Math.ceil(Math.random()*100000);
+    const insertQuery = "insert into userfollowing (id, user_id, u_following, u_following_id) VALUES (?, ?, ?, ?)"
+    pool.query("SELECT u_name from users where id = ?",[userId],(err,results)=>{
+      if(err){
+        res.status(500).json({error:"error fetching the data"})
+      }
+      const user_name = results[0];
+      pool.query(insertQuery,[id,userId,user_name,profileId],(errs,results)=>{
+        if(errs){
+          res.status(500).json({error:"error inserting the data"})
+        }
+        res.json({success:"data added succesfully"});
+      })
+    })
+})
 
 //-------------------------------------------------------------------------------------------------------------------
 // Start the server

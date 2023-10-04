@@ -29,10 +29,28 @@ const UserUploads = () => {
       setHeroes([]);
     }
       setLoading(false);
+      if(res.status==401){
+        Swal.fire({
+            position: 'top',
+            icon: 'error',
+            text: 'session timed Out',
+            timer: 2000
+          }).then(()=>{
+            window.location = "/";
+          })
+    }
     })
     .catch((err)=>{
-        alert(err, "please login again")
-        window.location.href = "/"
+      console.log(err)
+      if(err.response.status==401){
+          Swal.fire({
+              position: 'top',
+              icon: 'error',
+              text: 'session timed Out',
+            }).then(()=>{
+              // window.location = "/";
+            })
+      }
     })
   };
 

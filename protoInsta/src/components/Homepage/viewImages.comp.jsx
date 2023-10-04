@@ -21,10 +21,8 @@ const ViewComp = () => {
     const user_id = useSelector(state=> state.authentication.userId);
   
   const refresh = () => {
-
     Api.get("/getLikes")
     .then((res)=>{
-        console.log(res)
         setLikes(res.data);
     })
     .catch((err)=>{
@@ -38,13 +36,29 @@ const ViewComp = () => {
       } 
     }).then((res) => {
       setImages(res.data);
-      console.log(user_id,ctoken);
       setLoading(false);
-
+      if(res.status==401){
+        Swal.fire({
+            position: 'top',
+            icon: 'error',
+            text: 'session timed Out',
+            timer: 2000
+          }).then(()=>{
+            window.location = "/";
+          })
+    }
     })
     .catch((err)=>{
-      alert(err, "please login again")
-      window.location = "/"
+      console.log(err)
+        if(err.response.status==401){
+            Swal.fire({
+                position: 'top',
+                icon: 'error',
+                text: 'session timed Out',
+              }).then(()=>{
+                window.location = "/";
+              })
+        }
     })
   };
   

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Api from '../../api/api';
+import Swal from 'sweetalert2';
 
 const CommentComp = (heros) => {
     const {hero} = heros;
@@ -17,19 +18,54 @@ const CommentComp = (heros) => {
         Api.get("/comments")
         .then((res) => {
         setAllComments(res.data);
+        if(res.status==401){
+            Swal.fire({
+                position: 'top',
+                icon: 'error',
+                text: 'session timed Out',
+                timer: 2000
+              }).then(()=>{
+                window.location = "/";
+              })
+        }
         })
         .catch((err)=>{
-        alert(err, "please login again");
-        window.location = "/"
+            console.log(err)
+            if(err.response.status==401){
+                Swal.fire({
+                    position: 'top',
+                    icon: 'error',
+                    text: 'session timed Out',
+                  }).then(()=>{
+                    window.location = "/";
+                  })
+            }
         })
 
         Api.get("/data")
         .then((res)=>{
             setUserData(res.data);
-            console.log(userData);
-            console.log(res.data);
+            if(res.status==401){
+                Swal.fire({
+                    position: 'top',
+                    icon: 'error',
+                    text: 'session timed Out',
+                    timer: 2000
+                  }).then(()=>{
+                    window.location = "/";
+                  })
+            }
         }).catch((err)=>{
-            console.log(err);
+            console.log(err)
+        if(err.response.status==401){
+            Swal.fire({
+                position: 'top',
+                icon: 'error',
+                text: 'session timed Out',
+              }).then(()=>{
+                window.location = "/";
+              })
+        }
         })
     }
 
@@ -47,13 +83,38 @@ const CommentComp = (heros) => {
             })
             .then((res)=>{
               if(res.status==200){
-                alert("deleted successfully")
-                refresh();
+                    Swal.fire({
+                        position: 'top',
+                        icon: 'success',
+                        text: 'deleted succesfully',
+                        timer: 1500
+                      }).then(()=>{
+                          refresh();
+                      })
               }
+              else if(res.status==401){
+                Swal.fire({
+                    position: 'top',
+                    icon: 'error',
+                    text: 'session timed Out',
+                    timer: 2000
+                  }).then(()=>{
+                    window.location = "/";
+                  })
+            }
               console.log(res.status)
             })
             .catch((err)=>{
-              alert("Error", err)
+                console.log(err)
+                if(err.response.status==401){
+                    Swal.fire({
+                        position: 'top',
+                        icon: 'error',
+                        text: 'session timed Out',
+                      }).then(()=>{
+                        window.location = "/";
+                      })
+                }
             })
           }
           function comment(evt, imageId) {
@@ -68,14 +129,28 @@ const CommentComp = (heros) => {
             .then((res)=>{
               
               if(res.status==200){
-                alert("posted successfully");
+                    Swal.fire({
+                        position: 'top',
+                        icon: 'success',
+                        text: 'Posted succesfully',
+                        timer: 2000
+                      }).then(()=>{
+                          refresh();
+                      })
               }
               console.log(res.data);
-              refresh();
             })
             .catch((err)=>{
-              console.log(err)
-              alert("Error", err);
+                console.log(err)
+                if(err.response.status==401){
+                    Swal.fire({
+                        position: 'top',
+                        icon: 'error',
+                        text: 'session timed Out',
+                      }).then(()=>{
+                        window.location = "/";
+                      })
+                }
             })
           }
 

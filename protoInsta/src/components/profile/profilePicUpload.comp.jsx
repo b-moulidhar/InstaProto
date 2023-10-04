@@ -68,7 +68,7 @@ const ProfilePicUpload = () => {
     <div className="container">
     <HeaderComp/>
       <form id="uploadForm" onSubmit={sendImage}>
-        <label htmlFor="file">Select a file:</label>
+        <label htmlFor="file">Select your profile pic</label>
         <br />
         <input type="file" name="file" id="file" onChange={inputHandler} />
         <br />
@@ -80,7 +80,7 @@ const ProfilePicUpload = () => {
           />
         )}
         <br />
-        <button type="submit">Upload File</button>
+        <button type="submit">update Pic</button>
       </form>
     </div>
     </>

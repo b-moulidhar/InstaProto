@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Api from '../../api/api';
 import { NavLink } from 'react-router-dom';
 import "./uploadbyComp.css"
+import Swal from 'sweetalert2';
 
 const UplodedByComp = (props) => {
     const {hero} = props;
@@ -11,9 +12,28 @@ const UplodedByComp = (props) => {
             Api.get("/data")
             .then((res)=>{
                 setUsers(res.data)
+                if(res.status==401){
+                    Swal.fire({
+                        position: 'top',
+                        icon: 'error',
+                        text: 'session timed Out',
+                        timer: 2000
+                      }).then(()=>{
+                        window.location = "/";
+                      })
+                }
             })
             .catch((err)=>{
-                alert(err);
+                console.log(err)
+            if(err.response.status==401){
+                Swal.fire({
+                    position: 'top',
+                    icon: 'error',
+                    text: 'session timed Out',
+                }).then(()=>{
+                    window.location = "/";
+                })
+            }
             })
         }
     },[hero]);
