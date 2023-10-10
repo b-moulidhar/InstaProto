@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Api from '../../api/api';
 import Swal from 'sweetalert2';
+import { NavLink } from 'react-router-dom';
+import createBlobUrl from '../BlobToImage/blobToImage';
 
 const CommentComp = (heros) => {
     const {hero} = heros;
@@ -36,6 +38,7 @@ const CommentComp = (heros) => {
                     position: 'top',
                     icon: 'error',
                     text: 'session timed Out',
+                    timer: 2000
                   }).then(()=>{
                     window.location = "/";
                   })
@@ -62,6 +65,7 @@ const CommentComp = (heros) => {
                 position: 'top',
                 icon: 'error',
                 text: 'session timed Out',
+                timer: 2000
               }).then(()=>{
                 window.location = "/";
               })
@@ -111,6 +115,7 @@ const CommentComp = (heros) => {
                         position: 'top',
                         icon: 'error',
                         text: 'session timed Out',
+                        timer: 2000
                       }).then(()=>{
                         window.location = "/";
                       })
@@ -147,6 +152,7 @@ const CommentComp = (heros) => {
                         position: 'top',
                         icon: 'error',
                         text: 'session timed Out',
+                        timer: 2000
                       }).then(()=>{
                         window.location = "/";
                       })
@@ -194,9 +200,7 @@ const CommentComp = (heros) => {
             const mainTag = document.querySelectorAll(`.allComments_${imageId}`);
             if (mainTag) {
               mainTag.forEach(element => {
-                
                 element.style.display = "none";
-               
               });
               // Apply styles to the clicked element
             }
@@ -213,18 +217,21 @@ const CommentComp = (heros) => {
     <div className="allCmnt">
               {
                 allComments.map((val, idx) => {
+                    let usrid;
+                    let profilepic
                 let data = userData.map((users)=>{
                     if(users.id==val.user_id){
-                      if (val.image_id === hero.id) {
-                        
+                        if (val.image_id === hero.id) {
+                          usrid = users.id ; 
+                          profilepic = users.profilepic;
                         return users.u_name;
                     }
                   }
                   })
-                  if (val.image_id === hero.id) {
+                  if (val.image_id === hero.id && usrid) {
                   return (
                     <div key={idx} className={"allComments_" + val.image_id} style={{ display: "none" }}>
-                    <p className="cmnt"><span>{data}</span>: <span>{val.u_comment}</span> &nbsp;
+                    <p className="cmnt"><span className='commentator'><NavLink to={"/profileDetails/"+usrid}><img src={createBlobUrl(profilepic, "image/jpeg")} alt="user Pic" width="30px" className='commenterImg' />{data}</NavLink></span>: <span>{val.u_comment}</span> &nbsp;
                     {val.user_id === Number(userId) && <button id="deleteCmntBtn" onClick={() => deleteComment(val.id)}>delete</button>}
                     </p>
                   </div>

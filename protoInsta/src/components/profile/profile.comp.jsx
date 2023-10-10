@@ -5,6 +5,7 @@ import HeaderComp from "../header/header.comp";
 import { NavLink, useParams } from "react-router-dom";
 import Api from "../../api/api";
 import Swal from "sweetalert2";
+import createBlobUrl from "../BlobToImage/blobToImage";
  
 let ProfileComp = ()=>{
     let [userData, setUserData] = useState([]);
@@ -35,8 +36,9 @@ let ProfileComp = ()=>{
                 position: 'top',
                 icon: 'error',
                 text: 'session timed Out',
+                timer: 2000
               }).then(()=>{
-                // window.location = "/";
+                window.location = "/";
               })
         }
     })
@@ -80,8 +82,14 @@ let ProfileComp = ()=>{
             }).catch(err=>{
                 console.log(err)
                 if(err.response.status==401){
-                    alert("session expired")
-                    // window.location = "/";
+                    Swal.fire({
+                        position: 'top',
+                        icon: 'error',
+                        text: 'session timed Out',
+                        timer: 2000
+                      }).then(()=>{
+                        window.location = "/";
+                      })
                 }
             })      
                 }
@@ -89,35 +97,6 @@ let ProfileComp = ()=>{
         }
 
     }
-
-    const createBlobUrl = (base64String, fileType) => {
-        const byteCharacters = atob(base64String);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-    
-        // Set the correct MIME type based on the fileType parameter
-        let mimeType;
-        switch (fileType) {
-          case "image/jpeg":
-            mimeType = "image/jpeg";
-            break;
-          case "application/pdf":
-            mimeType = "application/pdf";
-            break;
-          case "image/png":
-            mimeType = "image/png";
-            break;
-          default:
-            mimeType = "image/png"; // Default to image/jpeg if the fileType is unknown
-            break;
-        }
-    
-        const blob = new Blob([byteArray], { type: mimeType });
-        return URL.createObjectURL(blob);
-      };
 
       function popUp(){
         var x = document.getElementsByClassName("editPopUp")[0];

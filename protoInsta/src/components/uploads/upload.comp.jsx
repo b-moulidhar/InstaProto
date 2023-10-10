@@ -72,6 +72,7 @@ const UploadComp = () => {
                 position: 'top',
                 icon: 'error',
                 text: 'session timed Out',
+                timer: 2000
               }).then(()=>{
                 window.location = "/";
               })

@@ -140,13 +140,29 @@ const verifyOtpMail = async function(data,otp,res){
 
 // READ
 app.get("/data", verifyToken ,(req, res) => {
-  pool.query("SELECT * FROM users", (err, results) => {
+  const query = "SELECT id,u_name,email,mobile,profilepic from users";
+  pool.query(query, (err, result) => {
+    console.log(result);
     if (err) {
       console.error('Error executing query:', err);
       return res.status(500).json({ error: 'Error fetching data from MySQL' });
     }
-
-    return res.json(results);
+    const fileDataArray=[];
+     var blobData;
+     result.forEach((userdata,idx)=>{
+      console.log(userdata)
+       if(userdata.profilepic==null){
+         blobData=null;
+       }else{
+         blobData = (userdata.profilepic).toString('binary');
+       }
+       if(blobData || blobData==null){
+         fileDataArray.push({ id:userdata.id, u_name:userdata.u_name , email:userdata.email, mobile:userdata.mobile, profilepic:blobData })
+       }
+      })
+      if(fileDataArray.length>0){
+        return res.json(fileDataArray);
+      }
   });
 });
 

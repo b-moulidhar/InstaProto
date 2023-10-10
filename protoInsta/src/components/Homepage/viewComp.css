@@ -113,6 +113,16 @@ input[type="textbox"]:focus {
     margin: 100px auto;
 }
 
+.commenterImg{
+    width: 30px;
+    height: 30px;
+    border-radius: 40%;
+}
+.commentator a{
+    color: darkcyan;
+    text-decoration: none;
+}
+
 @media (min-width:992px){
     .container{
         position: relative;
