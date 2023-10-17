@@ -96,22 +96,33 @@ function ForgetPass(){
       }
 
       const clickHandler = function(e){
-        if(option){
+        if(phno=="" && email==""){
           Swal.fire({
             position: 'top',
             icon: 'info',
-            text: 'sending otp please wait for 10s',
+            text: 'enter some value',
             background:"#edf2f4",
             showConfirmButton: false,
             timer: 3000
           })
-          if(option == "Phone"){
-            sendPhone(e);
-          }else{
-            sendEmail(e)
-          }
         }else{
-          console.log("please select an option");
+          if(option){
+            Swal.fire({
+              position: 'top',
+              icon: 'info',
+              text: 'sending otp please wait for 10s',
+              background:"#edf2f4",
+              showConfirmButton: false,
+              timer: 3000
+            })
+            if(option == "Phone"){
+              sendPhone(e);
+            }else{
+              sendEmail(e)
+            }
+          }else{
+            console.log("please select an option");
+          }
         }
       }
 

@@ -46,7 +46,7 @@ function OtpComp(){
 						<div class="text-center mt-4">
 							<h1 class="h2">Reset password</h1>
 							<p class="lead">
-								Enter your phone Number to reset your password.
+								Enter your Otp to reset your password.
 							</p>
 						</div>
 

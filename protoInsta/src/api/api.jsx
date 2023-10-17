@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const Api = axios.create({
   baseURL: 'http://localhost:5000/',
@@ -25,8 +26,14 @@ Api.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Handle unauthorized error
-      window.location.href = '/';
+      Swal.fire({
+        position: 'top',
+        icon: 'error',
+        text: 'session timed Out',
+        timer: 2000
+      }).then(()=>{
+        window.location = "/";
+      })
     } 
     // else if (!error.response) {
     //   // Handle network error

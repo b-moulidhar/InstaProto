@@ -1,0 +1,16 @@
+ {
+     "dbhost":"your database host", 
+     "dbname":"your database name",
+     "pass":"database password",
+     "user":"database username",
+     "accountSid":"twilio account sid",
+     "authToken":"twilio account auth token",
+     "twilioPhoneNumber":"twilio phone number",
+     "adminEmail":"admin email from which otp should be sent",
+     "adminPass":"admin email password (not required)",
+     "etherealEmail":"dummy email does not work",
+     "etherealPass":"dummy password does not work",
+     "yahooEmail":"dumy email does not work",
+     "yahooPass":"dummy password does not work",
+     "pswd": "admin gmail key (app password (2FA))"
+ }

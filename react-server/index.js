@@ -79,6 +79,7 @@ const verifyToken = (req, res, next) => {
 
 const otpStorage = {};
 
+//*********************************************************************************************************
 const otpGenrator = (data)=>{
 
   // Generate a 6-digit OTP
@@ -93,6 +94,7 @@ const otpGenrator = (data)=>{
 
 }
 
+//*********************************************************************************************************
 const sendOtpMail = async function(emails,req,res){
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -117,7 +119,7 @@ const sendOtpMail = async function(emails,req,res){
     console.error("Error sending email:", err);
   }
 }
-
+//*********************************************************************************************************
 const verifyOtpMail = async function(data,otp,res){
   const enteredOTP = otp; // The OTP entered by the user
   var storedOTP = otpStorage[data]; // otpStorage is an object that stores OTPs
@@ -150,7 +152,6 @@ app.get("/data", verifyToken ,(req, res) => {
     const fileDataArray=[];
      var blobData;
      result.forEach((userdata,idx)=>{
-      console.log(userdata)
        if(userdata.profilepic==null){
          blobData=null;
        }else{
