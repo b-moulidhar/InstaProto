@@ -23,7 +23,6 @@ const createBlobUrl = (base64String, fileType) => {
         mimeType = "image/png"; // Default to image/jpeg if the fileType is unknown
         break;
     }
-
     const blob = new Blob([byteArray], { type: mimeType });
     return URL.createObjectURL(blob);
   };
