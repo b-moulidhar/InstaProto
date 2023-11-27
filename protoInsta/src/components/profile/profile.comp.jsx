@@ -9,6 +9,8 @@ import createBlobUrl from "../BlobToImage/blobToImage";
  
 let ProfileComp = ()=>{
     let [userData, setUserData] = useState([]);
+    let [followers, setFollowData] = useState(0);
+    let [following, setFollowingData] = useState(0);
     const [originalUser, setOriginalUser] = useState(false);
     // let [nvals,setNvals] = useState({name:'',age:''});
     let {id} = useParams();
@@ -42,6 +44,24 @@ let ProfileComp = ()=>{
               })
         }
     })
+    Api.get('/profile/followers/'+id)
+    .then((res)=>{
+        
+            // console.log(datas);
+         setFollowData(res.data.length)
+        
+    })
+    .catch((err)=>{
+        console.log(err)
+    })
+    Api.get('/profile/following/'+id)
+    .then((res)=>{
+            setFollowingData(res.data.length);
+    })
+    .catch((err)=>{
+        console.log(err)
+    })
+
     }
  
     useEffect(function(){
@@ -114,13 +134,21 @@ let ProfileComp = ()=>{
           }
       }
 
-      function userFollow(){
+      function userFollow(e){
+        e.preventDefault();
         Api.post("/profile/follow/"+id, {userId:userId})
         .then((res)=>{
             console.log(res.data)
         })
         .catch((err)=>{
             console.log(err)
+        })
+        Api.post("/profile/following/"+id,{userId:userId})
+        .then((res)=>{
+            console.log(res);
+        })
+        .catch((err)=>{
+            console.log(err);
         })
       }
     return <>
@@ -162,9 +190,14 @@ let ProfileComp = ()=>{
             <div className="mb-3">
                 <label htmlFor="name" className="form-label">User Mobile : {userData[0].mobile}</label>
             </div>
+            <div className="mb-3">
+                <label htmlFor="name" className="form-label">followers : {followers}</label> &nbsp;
+                <label htmlFor="name" className="form-label">following : {following}</label>
+            </div>
+            
             {!originalUser &&
             <div className="mb-3">
-                <button className="btn btn-primary" disabled onClick={userFollow}>follow</button>
+                <button className="btn btn-primary" onClick={userFollow}>follow</button>
             </div>
             }
         </form>

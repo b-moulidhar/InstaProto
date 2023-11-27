@@ -632,20 +632,74 @@ app.delete("/unPostLikes/:imgId",verifyToken,(req,res)=>{
 app.post("/profile/follow/:id",verifyToken,(req,res)=>{
     let profileId = req.params.id;
     let userId = req.body.userId;
+    console.log(profileId,userId,"QEJAFWQFNQGF");
     let id = Math.ceil(Math.random()*100000);
-    const insertQuery = "insert into userfollowing (id, user_id, u_following, u_following_id) VALUES (?, ?, ?, ?)"
+    const insertQuery = "insert into followerssample (id, user_id, followers, followers_id) VALUES (?, ?, ?, ?)"
     pool.query("SELECT u_name from users where id = ?",[userId],(err,results)=>{
       if(err){
-        res.status(500).json({error:"error fetching the data"})
+        return res.status(500).json({error:"error fetching the data"})
       }
-      const user_name = results[0];
+      const user_name = results[0].u_name;
+      console.log(id,userId,user_name,profileId);
       pool.query(insertQuery,[id,userId,user_name,profileId],(errs,results)=>{
         if(errs){
-          res.status(500).json({error:"error inserting the data"})
+          if(errs.sqlState==23000){
+            return res.status(500).json({error:"already followed"});
+          }
+          return res.status(500).json({error:"error inserting the data"})
         }
         res.json({success:"data added succesfully"});
       })
     })
+})
+//-------------------------------------------------------------------------------------------------------------------
+app.post("/profile/following/:id",verifyToken,(req,res)=>{
+    let profileId = req.params.id;
+    let userId = req.body.userId;
+    console.log(profileId,userId,"QEJAFWQFNQGF");
+    let id = Math.ceil(Math.random()*100000);
+    const insertQuery = "insert into followingsample (id, user_id, u_following, u_following_id) VALUES (?, ?, ?, ?)"
+    pool.query("SELECT u_name from users where id = ?",[userId],(err,results)=>{
+      if(err){
+        return res.status(500).json({error:"error fetching the data"})
+      }
+      const user_name = results[0].u_name;
+      console.log(id,userId,user_name,profileId);
+      pool.query(insertQuery,[id,profileId,user_name,userId],(errs,results)=>{
+        if(errs){
+          if(errs.sqlState==23000){
+            return res.status(500).json({error:"already followed"});
+          }
+          return res.status(500).json({error:"error inserting the data"})
+        }
+        res.json({success:"data added succesfully"});
+      })
+    })
+})
+
+//-------------------------------------------------------------------------------------------------------------------
+app.get('/profile/followers/:id',verifyToken,(req,res)=>{
+  let profId = req.params.id;
+  query = "SELECT * FROM followerssample WHERE user_id = ?"
+  pool.query(query,[profId],(err,results)=>{
+    if(err){
+      return res.status(500).json({error:"error fetching the data"})
+    }
+    console.log(results,"helloPost");
+    return res.json(results);
+  })
+})
+//-------------------------------------------------------------------------------------------------------------------
+app.get('/profile/following/:id',verifyToken,(req,res)=>{
+  let profId = req.params.id;
+  query = "SELECT * FROM followingsample WHERE user_id = ?"
+  pool.query(query,[profId],(err,results)=>{
+    if(err){
+      return res.status(500).json({error:"error fetching the data"})
+    }
+    console.log(results,"helloGet");
+    return res.json(results);
+  })
 })
 
 //-------------------------------------------------------------------------------------------------------------------
