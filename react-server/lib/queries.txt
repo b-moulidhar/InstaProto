@@ -74,7 +74,10 @@ CREATE TABLE images (
 
 ALTER TABLE users
 MODIFY COLUMN mobile VARCHAR(11);
- 
+
+ ALTER TABLE images
+ADD filedata longblob;
+
 ALTER TABLE followerssample
 ADD CONSTRAINT unique_combination UNIQUE (user_id, followers_id);
 

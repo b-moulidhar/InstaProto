@@ -56,6 +56,7 @@ let ProfileComp = ()=>{
     })
     Api.get('/profile/following/'+id)
     .then((res)=>{
+        console.log(res.data.length);
             setFollowingData(res.data.length);
     })
     .catch((err)=>{
@@ -70,10 +71,14 @@ let ProfileComp = ()=>{
         setOriginalUser(true);
 }
     },[id]);
-
+    
     function changeImage(evt){
+        var x = document.getElementsByClassName("editPopUp")[0];
+        var y = document.getElementById("profileData");
         if(evt.target.id=="insertPic"){
-            document.getElementById("picUpload").click()
+            document.getElementById("picUpload").click();
+            y.style.filter = "none";
+            x.style.display = "none";
         }else if(evt.target.id=="deletePic"){
             
             Swal.fire({
@@ -96,6 +101,8 @@ let ProfileComp = ()=>{
                         'your profile pic has been deleted',
                         'success'
                     ).then(()=>{
+                        y.style.filter = "none";
+                        x.style.display = "none";
                         refresh();
                     })
                 }
@@ -120,7 +127,7 @@ let ProfileComp = ()=>{
 
       function popUp(){
         var x = document.getElementsByClassName("editPopUp")[0];
-        let y = document.getElementById("profileData");
+        var y = document.getElementById("profileData");
         if (x.style.display === "none") {
             document.getElementById("profileData").addEventListener("click", function() {
                 this.style.filter = "none";
@@ -150,6 +157,7 @@ let ProfileComp = ()=>{
         .catch((err)=>{
             console.log(err);
         })
+        refresh();
       }
     return <>
     <div className="container">
@@ -191,8 +199,8 @@ let ProfileComp = ()=>{
                 <label htmlFor="name" className="form-label">User Mobile : {userData[0].mobile}</label>
             </div>
             <div className="mb-3">
-                <label htmlFor="name" className="form-label">followers : {followers}</label> &nbsp;
-                <label htmlFor="name" className="form-label">following : {following}</label>
+                <label htmlFor="name" className="form-label">following : {followers}</label> &nbsp;
+                <label htmlFor="name" className="form-label">followers : {following}</label>
             </div>
             
             {!originalUser &&

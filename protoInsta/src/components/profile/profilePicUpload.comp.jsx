@@ -50,7 +50,7 @@ const ProfilePicUpload = () => {
             showConfirmButton: false,
             timer: 1000
           }).then(()=>{
-            window.location = "/homePage/profile"
+            window.location = "/profileDetails/"+userId;
         })
         }
       })

@@ -4,3 +4,6 @@
     background: rgb(165,161,227);
     background: linear-gradient(90deg, rgba(165,161,227,1) 0%, rgba(194,240,227,1) 50%, rgba(133,213,230,1) 100%);
 }
+.navBtn{
+    font-family: cursive;
+}

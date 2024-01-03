@@ -44,7 +44,7 @@ function HeaderComp(){
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
     <div className="container-fluid">
         <NavLink end to="/homePage">
-            <button className="btn primary">Home</button>
+            <button className="btn primary navBtn">Home</button>
         </NavLink>
         <button
             className="navbar-toggler"
@@ -61,21 +61,21 @@ function HeaderComp(){
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item">
                     <NavLink end to="/homePage/uploads">
-                        <button className="btn primary">viewImages</button>
+                        <button className="btn primary navBtn">view uploads</button>
                     </NavLink>
                 </li>
                 <li className="nav-item">
                     <NavLink end to="/homePage/userImages">
-                        <button className="btn primary">upload a image</button>
+                        <button className="btn primary navBtn">upload a image</button>
                     </NavLink>
                 </li>
                 <li className="nav-item">
                     <NavLink end to={link}>
-                        <button className="btn primary">profile</button>
+                        <button className="btn primary navBtn">profile</button>
                     </NavLink>
                 </li>
             </ul>
-            <button className="btn btn-outline-success" onClick={logout}>
+            <button className="btn btn-outline-success navBtn" onClick={logout}>
                 logout
             </button>
         </div>
