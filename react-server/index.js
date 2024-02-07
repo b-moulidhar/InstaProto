@@ -71,7 +71,7 @@ const verifyToken = (req, res, next) => {
     if (err) {
       return res.status(401).json({ error: "Invalid token" });
     }
-    console.log(decoded)
+    // console.log(decoded)
     req.user = decoded;
     next();
   });
@@ -112,7 +112,7 @@ const sendOtpMail = async function(emails,req,res){
       subject: 'OTP',
       text: `OTP is ${otp}`
     });
-    console.log("Email sent:", result.response);
+    // console.log("Email sent:", result.response);
     res.status(250).json('OTP sent successfully' );
 
   } catch (err) {
@@ -123,11 +123,11 @@ const sendOtpMail = async function(emails,req,res){
 const verifyOtpMail = async function(data,otp,res){
   const enteredOTP = otp; // The OTP entered by the user
   var storedOTP = otpStorage[data]; // otpStorage is an object that stores OTPs
-  console.log(storedOTP)
-  console.log(storedOTP == enteredOTP);
+  // console.log(storedOTP)
+  // console.log(storedOTP == enteredOTP);
   if (storedOTP == enteredOTP) {
     // OTP is verified successfully
-    console.log('otpStorage before deletion:', otpStorage)
+    // console.log('otpStorage before deletion:', otpStorage)
     delete otpStorage[data]; // Remove the OTP from storage to prevent replay attacks
      res.json({ message: 'OTP verified successfully' });
   } else {
@@ -144,7 +144,7 @@ const verifyOtpMail = async function(data,otp,res){
 app.get("/data", verifyToken ,(req, res) => {
   const query = "SELECT id,u_name,email,mobile,profilepic from users";
   pool.query(query, (err, result) => {
-    console.log(result);
+    // console.log(result);
     if (err) {
       console.error('Error executing query:', err);
       return res.status(500).json({ error: 'Error fetching data from MySQL' });
@@ -175,7 +175,7 @@ app.get('/login',(req,res)=>{
       console.error('Error executing query:', err);
       return res.status(500).json({ error: 'Error fetching data from MySQL' });
     }
-    console.log(results);
+    // console.log(results);
     return res.json(results);
   });
 })
@@ -183,7 +183,7 @@ app.get('/login',(req,res)=>{
 
 app.post("/login", (req, res) => {
   const { email, pswd } = req.body;
-  console.log(req.body);
+  // console.log(req.body);
 
   // Fetch user from database based on email
   pool.query("SELECT * FROM users WHERE email = ?", [email], (err, results) => {
@@ -193,7 +193,7 @@ app.post("/login", (req, res) => {
     }
 
     const users = results;
-    console.log(users);
+    // console.log(users);
 
     if (users.length === 0) {
       return res.status(401).json({ error: "Invalid credentials" });
@@ -240,7 +240,7 @@ app.post('/register',(req,res)=>{
           console.error('Error inserting new element:', err);
           res.status(500).json({ error: 'Error inserting new element' });
         } else {
-          console.log('New element inserted successfully:', result.insertId);
+          // console.log('New element inserted successfully:', result.insertId);
           res.status(201).json({ message: 'New element inserted successfully' });
         }
       });
@@ -287,7 +287,7 @@ app.delete("/deleteUsrUpload",verifyToken, (req,res)=>{
       console.error('Error deleting element:', err);
       res.status(500).json({ error: 'Error deleting element' });
     } else {
-      console.log('Deleted successfully',results);
+      // console.log('Deleted successfully',results);
       res.status(200).json({ message: 'Deleted successfully' });
     }
   })
@@ -305,7 +305,7 @@ app.post('/create', (req, res) => {
         console.error('Error inserting new element:', err);
         res.status(500).json({ error: 'Error inserting new element' });
       } else {
-        console.log('New element inserted successfully:', result.insertId);
+        // console.log('New element inserted successfully:', result.insertId);
         res.status(201).json({ message: 'New element inserted successfully' });
       }
     });
@@ -347,7 +347,7 @@ app.post('/upload', [upload.single('file'), verifyToken], (req, res) => {
     const { image_id, cmts} = req.body;
     const id = Math.ceil(Math.random()*10000);
     const uid = req.headers.userid;
-    console.log(req.body);
+    // console.log(req.body);
 
     const query = 'INSERT INTO comments (id, user_id, image_id, u_comment) VALUES (?, ?, ?, ?)';
   pool.query(query, [id, uid, image_id, cmts], (err, result) => {
@@ -364,7 +364,7 @@ app.post('/upload', [upload.single('file'), verifyToken], (req, res) => {
 
 app.delete("/comments", verifyToken, (req,res)=>{
       const cmtId = req.headers.commentid;
-      console.log(cmtId)
+      // console.log(cmtId)
       const query = "DELETE FROM comments where id=?"
       pool.query(query,[cmtId],(err,results)=>{
         if (err) {
@@ -390,7 +390,7 @@ app.get("/comments", verifyToken ,(req, res) => {
 //-------------------------------------------------------------------------------------------------------------------
 app.post('/generateOTP',(req, res) => {
   const phoneNumber = req.body.phoneNumber; // The phone number to which OTP will be sent
-  console.log(req.body)
+  // console.log(req.body)
 
   if (!phoneNumber) {
     return res.status(400).json({ error: 'Phone number is missing' });
@@ -408,7 +408,7 @@ app.post('/generateOTP',(req, res) => {
         to: `+91${phoneNumber}`, // Assuming the phone number is in India with country code +91
       })
       .then((message) => {
-        console.log(`OTP sent to ${message.to}: ${otp}`);
+        // console.log(`OTP sent to ${message.to}: ${otp}`);
         resolve();
       })
       .catch((error) => {
@@ -431,7 +431,7 @@ app.post('/generateOTP',(req, res) => {
 
 app.post('/verifyOTP', (req, res) => {
   var data
-  console.log(req.body);
+  // console.log(req.body);
   if(!req.body.phno){
     data = req.body.email
   }else{
@@ -447,8 +447,8 @@ app.post('/verifyOTP', (req, res) => {
 //-------------------------------------------------------------------------------------------------------------------
 app.post("/updatepass",(req,res)=>{
 const {npass,contact} = req.body;
-console.log("update pass")
-console.log(req.body)
+// console.log("update pass")
+// console.log(req.body)
 const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.(com|in|edu|co)$/i;
 const phnumPattern = /^[6-9]\d{9}$/;
 bcrypt.hash(npass, 2, (err, u_pswd) => {
@@ -464,7 +464,7 @@ bcrypt.hash(npass, 2, (err, u_pswd) => {
   }
   if(query){
     pool.query(query,[u_pswd,contact],(err,result)=>{
-      console.log(result,"hello"+contact);
+      // console.log(result,"hello"+contact);
       if(result.changedRows==0){
         console.error('Error updating file:', err);
             return res.status(500).json({ error: 'Error updating file' });
@@ -490,7 +490,7 @@ app.post("/sendEmail", async (req, res)=> {
 
       const users = results;
       if(users[0] == undefined){
-        console.log("user does not exist ");
+        // console.log("user does not exist ");
         res.json("user does not exist")
       }else{
 
@@ -498,7 +498,7 @@ app.post("/sendEmail", async (req, res)=> {
 
           sendOtpMail(emails,req,res)
         } else {
-          console.log("user does not exist");
+          // console.log("user does not exist");
         }
       }
     });
@@ -632,31 +632,67 @@ app.delete("/unPostLikes/:imgId",verifyToken,(req,res)=>{
 app.post("/profile/follow/:id",verifyToken,(req,res)=>{
     let profileId = req.params.id;
     let userId = req.body.userId;
-    console.log(profileId,userId,"QEJAFWQFNQGF");
+    console.log(profileId);
+    // console.log(profileId,userId,"QEJAFWQFNQGF");
     let id = Math.ceil(Math.random()*100000);
-    const insertQuery = "insert into followerssample (id, user_id, followers, followers_id) VALUES (?, ?, ?, ?)"
-    pool.query("SELECT u_name from users where id = ?",[userId],(err,results)=>{
+    const insertQueryFlwrs = "insert into followerssample (id, user_id, followers, followers_id) VALUES (?, ?, ?, ?)";
+    const insertQueryFlwng = "insert into followingsample (id, user_id, u_following, u_following_id) VALUES (?, ?, ?, ?)";
+
+    pool.query("SELECT u_name,count(*) from users where id = ?",[userId],(err,result)=>{
       if(err){
         return res.status(500).json({error:"error fetching the data"})
       }
-      const user_name = results[0].u_name;
-      console.log(id,userId,user_name,profileId);
-      pool.query(insertQuery,[id,userId,user_name,profileId],(errs,results)=>{
-        if(errs){
-          if(errs.sqlState==23000){
-            return res.status(500).json({error:"already followed"});
-          }
-          return res.status(500).json({error:"error inserting the data"})
+      const user_name = result[0].u_name;
+      // console.log(id,userId,user_name,profileId);
+      pool.query("SELECT count(*) as count FROM followerssample WHERE user_id = ? and followers_id = ?",[userId,profileId],(errs,ress)=>{
+      console.log("results of count",ress)
+      // console.log("results of count",ress[0].count)
+        if(!errs && ress[0].count<1){
+          pool.query(insertQueryFlwrs,[id,userId,user_name,profileId],(errs,results)=>{
+            if(errs){
+              if(errs.sqlState==23000){
+                return res.status(500).json({error:"already followed"});
+              }
+              return res.status(500).json({error:"error inserting the data"})
+            }
+          })
+          pool.query(insertQueryFlwng,[id,profileId,user_name,userId],(errs,results)=>{
+            if(errs){
+              if(errs.sqlState==23000){
+                return res.status(500).json({error:"already followed"});
+              }
+              return res.status(500).json({error:"error inserting the data"})
+            }
+            res.json({success:"data added succesfully"});
+          })
         }
-        res.json({success:"data added succesfully"});
+        if(errs){
+          console.log(errs,"errorsses")
+        }
+        res.json({error:"already followed"}); 
       })
     })
 })
 //-------------------------------------------------------------------------------------------------------------------
+
+app.delete("/profile/unfollow",verifyToken,(req,res)=>{
+  const uid = req.headers.userid
+  const imagId = req.params.imgId
+  const queries = "DELETE FROM likes WHERE u_id = ? AND image_id = ?;"
+  pool.query(queries,[uid,imagId],(err,result)=>{
+    if(err){
+      console.error('Error executing query:', err);
+      return res.status(500).json({ error: 'Error fetching data' });
+    }
+    return res.json(result);
+  })
+})
+//-------------------------------------------------------------------------------------------------------------------
+
 app.post("/profile/following/:id",verifyToken,(req,res)=>{
     let profileId = req.params.id;
     let userId = req.body.userId;
-    console.log(profileId,userId,"QEJAFWQFNQGF");
+    // console.log(profileId,userId,"QEJAFWQFNQGF");
     let id = Math.ceil(Math.random()*100000);
     const insertQuery = "insert into followingsample (id, user_id, u_following, u_following_id) VALUES (?, ?, ?, ?)"
     pool.query("SELECT u_name from users where id = ?",[userId],(err,results)=>{
@@ -664,17 +700,23 @@ app.post("/profile/following/:id",verifyToken,(req,res)=>{
         return res.status(500).json({error:"error fetching the data"})
       }
       const user_name = results[0].u_name;
-      console.log(id,userId,user_name,profileId);
-      pool.query(insertQuery,[id,profileId,user_name,userId],(errs,results)=>{
-        if(errs){
-          if(errs.sqlState==23000){
-            return res.status(500).json({error:"already followed"});
+      // console.log(id,userId,user_name,profileId);
+      pool.query("SELECT count(*) as count FROM followingsample WHERE u_following_id = ?",[userId],(errs,ress)=>{
+        console.log("results of count",ress[0].count)
+          if(!err && ress[0].count<1){
+            pool.query(insertQuery,[id,profileId,user_name,userId],(errs,results)=>{
+              if(errs){
+                if(errs.sqlState==23000){
+                  return res.status(500).json({error:"already followed"});
+                }
+                return res.status(500).json({error:"error inserting the data"})
+              }
+              res.json({success:"data added succesfully"});
+            })
           }
-          return res.status(500).json({error:"error inserting the data"})
-        }
-        res.json({success:"data added succesfully"});
-      })
+          return res.json({error:"already followed"});
     })
+})
 })
 
 //-------------------------------------------------------------------------------------------------------------------
@@ -685,7 +727,7 @@ app.get('/profile/followers/:id',verifyToken,(req,res)=>{
     if(err){
       return res.status(500).json({error:"error fetching the data"})
     }
-    console.log(results,"helloPost");
+    // console.log(results,"helloPost");
     return res.json(results);
   })
 })
@@ -697,7 +739,7 @@ app.get('/profile/following/:id',verifyToken,(req,res)=>{
     if(err){
       return res.status(500).json({error:"error fetching the data"})
     }
-    console.log(results,"helloGet");
+    // console.log(results,"helloGet");
     return res.json(results);
   })
 })

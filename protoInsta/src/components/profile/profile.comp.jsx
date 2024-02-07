@@ -150,13 +150,25 @@ let ProfileComp = ()=>{
         .catch((err)=>{
             console.log(err)
         })
-        Api.post("/profile/following/"+id,{userId:userId})
+        // Api.post("/profile/following/"+id,{userId:userId})
+        // .then((res)=>{
+        //     console.log(res);
+        // })
+        // .catch((err)=>{
+        //     console.log(err);
+        // })
+        refresh();
+      }
+      function userUnFollow(e){
+        e.preventDefault();
+        Api.post("/profile/unfollow/"+id, {userId:userId})
         .then((res)=>{
-            console.log(res);
+            console.log(res.data)
         })
         .catch((err)=>{
-            console.log(err);
+            console.log(err)
         })
+        
         refresh();
       }
     return <>
@@ -208,6 +220,9 @@ let ProfileComp = ()=>{
                 <button className="btn btn-primary" onClick={userFollow}>follow</button>
             </div>
             }
+            <div className="mb-3">
+                <button className="btn btn-primary" onClick={userUnFollow}>unfollow</button>
+            </div>
         </form>
         }
             <div className="editPopUp">
