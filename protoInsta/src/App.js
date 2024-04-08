@@ -12,6 +12,7 @@ import TableComp from './components/table.comp';
 // import ProfileComp from './components/profile/profile.comp';
 import React, { Suspense } from 'react';
 
+let VoiceSearchComp = React.lazy(()=> import('./components/VoiceSearch/VoiceSearch'))
 let ProfileComp = React.lazy(()=> import('./components/profile/profile.comp'))
 let ProfilePicUpload = React.lazy(()=> import('./components/profile/profilePicUpload.comp'))
 let NewPass = React.lazy(()=> import('./components/forgot/newPass.comp'))
@@ -47,6 +48,7 @@ function App() {
                 {/* <Route path="homePage/profile" element={<ProfileComp/>}/> */}
                 <Route path="homePage/profile/picUpload"  element={<Suspense fallback={<> loading...</>}><ProfilePicUpload/> </Suspense> }/>
                 <Route path="profileDetails/:id"  element={<Suspense fallback={<> loading...</>}><ProfileComp/> </Suspense> }/>
+                <Route path="homepage/voiceSearch"  element={<Suspense fallback={<> loading...</>}><VoiceSearchComp/> </Suspense> }/>
                 {/* <Route path="viewImages" element={<ViewComp/>}/> */}
                 <Route path="testing" element={<TableComp/>}/>
             </Routes>

@@ -15,12 +15,12 @@ const ViewComp = () => {
   const [loading, setLoading] = useState(true);
   
   const ctoken = useSelector(state=> state.authentication.token);
-
   let token = localStorage.getItem("Authorization");
     let userId = localStorage.getItem("UserId"); 
     const user_id = useSelector(state=> state.authentication.userId);
   
   const refresh = () => {
+    console.log("token from redux",ctoken);
     Api.get("/getLikes")
     .then((res)=>{
         setLikes(res.data);
@@ -64,7 +64,6 @@ const ViewComp = () => {
   
 
   useEffect(() => {
-
     refresh();
     
   }, []);

@@ -74,6 +74,11 @@ function HeaderComp(){
                         <button className="btn primary navBtn"><span>profile</span></button>
                     </NavLink>
                 </li>
+                <li className="nav-item">
+                    <NavLink end to="/homepage/voiceSearch">
+                        <button className="btn primary navBtn"><span>voice search</span></button>
+                    </NavLink>
+                </li>
             </ul>
             <button className="btn primary navBtn" onClick={logout}><span>
                 logout</span>

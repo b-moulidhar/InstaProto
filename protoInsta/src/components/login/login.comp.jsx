@@ -27,6 +27,7 @@ const [credentials, setCredentials] = useState({email:'', pswd:''});
     function changeHandler(evt){
         setCredentials({...credentials,[evt.target.id]:evt.target.value})
     }
+
     function login(){
         localStorage.clear();
         axios.post("http://localhost:5000/login",credentials)
@@ -47,6 +48,8 @@ const [credentials, setCredentials] = useState({email:'', pswd:''});
                     showConfirmButton: false,
                     timer: 1000
                   }).then(()=>{
+                    console.log(token);
+                    debugger;
                       window.location.href ="/homePage"
                   })
             // history.push("/uploadImage");

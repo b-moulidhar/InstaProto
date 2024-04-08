@@ -743,6 +743,24 @@ app.get('/profile/following/:id',verifyToken,(req,res)=>{
     return res.json(results);
   })
 })
+//-------------------------------------------------------------------------------------------------------------------
+app.post('/voiceSearch',verifyToken,(req,res)=>{
+  let transcript = req.body.transcript;
+  let lowerTranscript = transcript.toLowerCase();
+  query = "SELECT * FROM users WHERE LOWER(u_name) LIKE ? OR LOWER(email) LIKE ?"
+  if (lowerTranscript) {
+    pool.query(query, [`%${lowerTranscript}%`, `%${lowerTranscript}%`], (err, results) => {
+      if (err) {
+        console.error("Error fetching data:", err);
+        return res.status(500).json({ error: "Error fetching the data" });
+      }
+      console.log("Voice search results:", results);
+      return res.json(results);
+    });
+  } else {
+    return res.status(400).json({ error: "Transcript is empty" });
+  }
+})
 
 //-------------------------------------------------------------------------------------------------------------------
 // Start the server
